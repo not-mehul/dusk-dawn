@@ -1,0 +1,54 @@
+{
+  "name": "dusk-dawn",
+  "version": "1.0.0",
+  "description": "Editorial Dusk & Dawn: the shared design package for Waymark, BookShelf, Ledger, Colophon and Rosetta. Tokens, Fraunces, shared components and the colour checks.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/not-mehul/dusk-dawn.git"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "bin": {
+    "dusk-dawn": "bin/dusk-dawn.mjs"
+  },
+  "files": [
+    "bin",
+    "css",
+    "fonts",
+    "svelte",
+    "tokens.json",
+    "style.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./svelte/index.d.ts",
+      "svelte": "./svelte/index.js",
+      "default": "./svelte/index.js"
+    },
+    "./tokens.css": "./css/tokens.css",
+    "./components.css": "./css/components.css",
+    "./tokens.json": "./tokens.json",
+    "./fonts/*": "./fonts/*",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "svelte": "./svelte/index.js",
+  "types": "./svelte/index.d.ts",
+  "scripts": {
+    "build": "node bin/dusk-dawn.mjs build",
+    "check": "node bin/dusk-dawn.mjs verify && node bin/dusk-dawn.mjs colours css svelte && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  },
+  "devDependencies": {
+    "svelte": "^5.57.3",
+    "svelte-check": "^4.7.7",
+    "typescript": "~6.0.3"
+  }
+}
