@@ -1,7 +1,7 @@
 {
   "name": "dusk-dawn",
-  "version": "1.0.0",
-  "description": "Editorial Dusk & Dawn: the shared design package for Waymark, BookShelf, Ledger, Colophon and Rosetta. Tokens, Fraunces, shared components and the colour checks.",
+  "version": "1.1.0",
+  "description": "Editorial Dusk & Dawn: the shared design package for Waymark, BookShelf, Ledger, Colophon, Rosetta and Mise. Tokens, Fraunces, shared components and the colour checks.",
   "license": "MIT",
   "type": "module",
   "repository": {
