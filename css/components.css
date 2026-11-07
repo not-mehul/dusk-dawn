@@ -228,6 +228,16 @@ button {
 .tabular {
   font-variant-numeric: tabular-nums;
 }
+/* One instruction read from across the counter (cooking mode, Mise). */
+.t-step {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.625rem, 4.5vw + 0.5rem, 2.5rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-heading);
+  overflow-wrap: break-word;
+}
 
 @media (min-width: 640px) {
   .t-page-title {
@@ -1109,8 +1119,127 @@ button.notice > .notice-chevron {
   background: var(--accent-sage);
 }
 
+/* ─── Switch row (§8.18) ─────────────────────────────────────── */
+
+/* A settings switch: the whole row is the target. */
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--space-3) 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--border-faint);
+  cursor: pointer;
+}
+.switch-row:last-child {
+  border-bottom: 0;
+}
+.switch-row:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.switch-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.switch-label {
+  color: var(--text-heading);
+  font-size: 0.9375rem;
+}
+.switch-track {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 26px;
+  border-radius: 13px;
+  background: var(--chart-track);
+  border: 1px solid var(--border);
+  transition: background-color var(--dur-toggle);
+}
+.switch-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-round);
+  background: var(--text-dim);
+  transition:
+    transform var(--dur-toggle) var(--ease-settle),
+    background-color var(--dur-toggle);
+}
+.switch-row[aria-checked='true'] .switch-track {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+}
+.switch-row[aria-checked='true'] .switch-knob {
+  transform: translateX(18px);
+  background: var(--on-accent);
+}
+
+/* ─── Timer chip (§8.19) ─────────────────────────────────────── */
+
+/* A running countdown: label, mono time, then its controls as icon buttons. */
+.timer-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  padding: 0 var(--space-1) 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--chip-bg);
+  color: var(--text-strong);
+}
+.timer-chip-label {
+  display: flex;
+  flex-direction: column;
+  margin-right: var(--space-2);
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  color: var(--text-dim);
+}
+.timer-chip-time {
+  min-width: 4ch;
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-amber);
+}
+.timer-chip.is-paused .timer-chip-time {
+  color: var(--text-dim);
+}
+.timer-chip.is-done {
+  border-color: var(--accent-bright);
+  background: rgba(var(--accent-bright-rgb), 0.14);
+}
+.timer-chip.is-done .timer-chip-time {
+  color: var(--accent-bright);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .timer-chip.is-done {
+    animation: timer-ring 1.2s var(--ease-standard) infinite alternate;
+  }
+}
+
 /* ─── Motion (§11) ───────────────────────────────────────────── */
 
+@keyframes timer-ring {
+  from {
+    background: rgba(var(--accent-bright-rgb), 0.06);
+  }
+  to {
+    background: rgba(var(--accent-bright-rgb), 0.22);
+  }
+}
 @keyframes fade-in {
   from {
     opacity: 0;

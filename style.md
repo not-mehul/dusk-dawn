@@ -1,6 +1,6 @@
 # Editorial Dusk & Dawn
 
-The shared design system for **Waymark**, **BookShelf**, **Ledger**, **Colophon** and **Rosetta**, and for any app that joins them. Every app gets it from one package, [`dusk-dawn`](https://github.com/not-mehul/dusk-dawn) (§18).
+The shared design system for **Waymark**, **BookShelf**, **Ledger**, **Colophon**, **Rosetta** and **Mise**, and for any app that joins them. Every app gets it from one package, [`dusk-dawn`](https://github.com/not-mehul/dusk-dawn) (§18).
 
 One design language, two themes. **Dusk** is the dark theme: serif display type over a near-black surface with ambient amber and sage glows, like a late-night reading room. **Dawn** is the light theme: the same type and structure on warm paper cream, like a sunlit study rather than a sterile dashboard.
 
@@ -285,6 +285,7 @@ Sizes are in `rem` on a 16px root. Never shrink the root on mobile.
 | Section label | 0.6875rem, tracked 0.25em, caps | Mono | `--text-dim`. Eyebrows, section markers, tab rail |
 | Field label | 0.625rem, tracked 0.2em, caps | Mono | `--text-dim`. Above every field |
 | Hint / footnote | 0.8125rem / 1.55 | Serif italic | `--text-dim` |
+| Step | `clamp(1.625rem, 4.5vw + 0.5rem, 2.5rem)` / 1.35 | Serif | `--text-heading`. One instruction at a time, read from arm's length: Mise's cooking mode (`.t-step`) |
 
 All-caps tracked mono is the core motif: eyebrows, labels, tabs and section markers. Never set all-caps at body size, and never track lowercase text.
 
@@ -526,6 +527,16 @@ The same structure in every app, in a sheet on phones:
 
 Each group starts with a section label. Rows are hairline-divided. A row's control goes on the right, and a hint goes under the label.
 
+### 8.18 Switch row
+
+An on/off setting is a switch row (`Switch`, `.switch-row`), from Rosetta. The whole row is one button with `role="switch"` and `aria-checked`, at least 56px tall: the label in `--text-heading` at 0.9375rem, an optional field hint under it, and the track on the right. The track is 44×26px in `--chart-track` with a 1px `--border`; on, it fills `--accent-bright` and the knob turns `--on-accent` and slides over `--dur-toggle`. Rows are divided by `--border-faint`, and the last one in a group has no rule.
+
+Use a switch only for a setting that takes effect at once. A choice of two or more named options is a segmented control (§8.4).
+
+### 8.19 Timer chip
+
+A running countdown (Mise's cooking timers): a chip with a two-line label in `--text-dim` (what it times, and where), the time in mono at 1.125rem with tabular figures in `--accent-amber`, then its controls as icon buttons (pause, +1 min, stop), each still 44px. Paused, the time turns `--text-dim`. Done, the chip takes an `--accent-bright` border and a 14% wash that breathes slowly while the alarm is due, unless reduced motion is set. Timer chips sit in a row that wraps, pinned at the top of the screen while any is left. The time is never the only signal that a timer has ended: the system notification and a toast say it in words (§15).
+
 ---
 
 ## 9. Icons
@@ -609,7 +620,7 @@ Lay out with `dvh` and container-relative units. Never use `100vh`, which mobile
 
 ## 14. Mobile platform rules (Capacitor)
 
-All three apps ship as Capacitor apps on Android and iOS.
+Every app ships as a Capacitor app for Android, and iOS where it has one.
 
 - **Edge to edge.** `viewport-fit=cover`. Pad the page and fixed chrome with `env(safe-area-inset-*)`. The toast, FAB and sheets sit above the bottom inset.
 - **System bars follow the theme.** Status and navigation bar icons are light in Dusk and dark in Dawn. Bars are transparent over the gradient. Update them on every `themechange`.
@@ -629,7 +640,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 
 **Shape.** `<app>://<action>?<param>=<value>&…&source=<sender>`.
 
-- The scheme is the app's name in lower case: `waymark`, `bookshelf`, `ledger`, `colophon`, `rosetta`. A new app takes its own name and joins `APPS` in `links.ts`.
+- The scheme is the app's name in lower case: `waymark`, `bookshelf`, `ledger`, `colophon`, `rosetta`, `mise`. A new app takes its own name and joins `APPS` in `links.ts`.
 - The action is a lower-case verb in the host position. Parameters are URL-encoded. Dates are `YYYY-MM-DD`, fractions are `0`–`1`, countries are ISO 3166-1 alpha-2 codes.
 - Every link carries `source=<sending app>`.
 - Actions and parameters are only ever added, never renamed or repurposed, because an older copy of a sibling may still send the old link.
@@ -644,6 +655,8 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 | `ledger://add?city=&region=&country=&date=` | Starts a new entry with the place and month filled in |
 | `rosetta://open?id=` or `?title=` | Opens that document, if it is in the library |
 | `colophon://open` | Opens Colophon. EPUBs reach it as files ("Open with" or the share sheet), never in a link |
+| `mise://open?id=` | Opens that recipe, if it is on the phone |
+| `mise://import?url=` | Reads the recipe at that page and opens the review screen; nothing is saved until the person presses *Save recipe* |
 
 **Receiving.**
 
@@ -725,6 +738,11 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Components: tab rail, choice cards, pickers, step flow, screen header, sheet, toast and undo, notice banner, two kinds of empty state, figures, share cards and settings structure.
 - Mobile platform rules (§14) and the contrast check in the build (§15).
 
+**Added in 1.1.0 (Mise)**
+
+- Mise joins the suite, with `mise://open` and `mise://import` (§14.1).
+- The step type size for cooking mode (§5.2), the switch row from Rosetta and Colophon (§8.18), and the timer chip (§8.19), each with its class in `components.css`. `Switch` is a shared component.
+
 **Decided**
 
 - Fraunces is bundled as the display serif in every app (§5.1).
@@ -746,9 +764,9 @@ Everything in this document that can be code lives in one package, **`dusk-dawn`
 |---|---|
 | `tokens.json` | Every colour, size, duration and font (§3, §5.1, §6, §11), and the contrast pairs (§15) |
 | `css/tokens.css` | The theme file generated from `tokens.json`, with the Fraunces `@font-face` rules |
-| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, segmented control, tab rail, modal, sheet, toast, notice, empty states |
+| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, segmented control, tab rail, modal, sheet, toast, notice, empty states, switch row, timer chip, step type |
 | `fonts/` | Fraunces, normal and italic, with its licence (§5.1) |
-| `TabRail`, `ThemeToggle`, `Toast` | The Svelte components every app shares (§8.5, §8.9, §8.12) |
+| `Switch`, `TabRail`, `ThemeToggle`, `Toast` | The Svelte components every app shares (§8.18, §8.5, §8.9, §8.12) |
 | `dusk-dawn` command | `check` (contrast), `colours` (no literal colours in an app), `css` and `kotlin` (theme files for other targets) |
 | `style.md` | This document |
 
@@ -756,7 +774,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 ### 18.2 Adopting it in a new app
 
-1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v1.0.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
+1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v1.1.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
 2. Import the two stylesheets first, before any of the app's own CSS:
 
    ```css
@@ -768,7 +786,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 3. Use the shared components from the package rather than writing new ones:
 
    ```ts
-   import { TabRail, ThemeToggle, Toast } from 'dusk-dawn';
+   import { Switch, TabRail, ThemeToggle, Toast } from 'dusk-dawn';
    ```
 
 4. Add both checks to the app's scripts, and make CI run them:
