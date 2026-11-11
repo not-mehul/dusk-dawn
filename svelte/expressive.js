@@ -115,11 +115,19 @@ export function shapeClipPath(name, points = 48, rotate = 0) {
 
 // ---------- springs ----------
 
+/** A CSS time ("320ms", "1.4s", ".6s": minifiers rewrite them) in milliseconds. */
+function toMs(value, fallback = 0) {
+  const m = /^\s*(-?[\d.]+)\s*(ms|s)?\s*$/.exec(value ?? '');
+  if (!m) return fallback;
+  const n = parseFloat(m[1]);
+  return m[2] === 's' ? n * 1000 : n;
+}
+
 /** Read a spring's easing and duration from the theme, e.g. spring('spatial-default'). */
 export function spring(name) {
   const style = getComputedStyle(document.documentElement);
   const easing = style.getPropertyValue(`--spring-${name}`).trim() || 'ease-out';
-  const duration = parseFloat(style.getPropertyValue(`--spring-${name}-dur`)) || 0;
+  const duration = toMs(style.getPropertyValue(`--spring-${name}-dur`));
   return { easing, duration };
 }
 
@@ -181,7 +189,7 @@ export function celebrate(options = {}) {
     spread = 1,
   } = options;
   const style = getComputedStyle(document.documentElement);
-  const duration = options.duration ?? (parseFloat(style.getPropertyValue('--dur-celebrate')) || 1400);
+  const duration = options.duration ?? toMs(style.getPropertyValue('--dur-celebrate'), 1400);
   const { x, y } = originPoint(options.origin);
 
   const layer = document.createElement('div');
