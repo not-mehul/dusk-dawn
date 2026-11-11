@@ -1320,9 +1320,13 @@ button.notice > .notice-chevron {
 }
 @media (prefers-reduced-motion: no-preference) {
   .timer-chip.is-done {
-    animation:
-      timer-ring 1.2s var(--ease-standard) infinite alternate,
-      dd-wiggle 1.2s var(--spring-spatial-fast) infinite;
+    animation: timer-ring 1.2s var(--ease-standard) infinite alternate;
+  }
+  /* The time rattles like a kitchen timer; the buttons beside it hold still
+     so they stay easy to hit. */
+  .timer-chip.is-done .timer-chip-time {
+    display: inline-block;
+    animation: dd-wiggle 1.2s var(--ease-standard) infinite;
   }
 }
 

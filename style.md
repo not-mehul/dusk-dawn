@@ -556,7 +556,7 @@ Use a switch only for a setting that takes effect at once. A choice of two or mo
 
 ### 8.19 Timer chip
 
-A running countdown (Mise's cooking timers): a chip with a two-line label in `--text-dim` (what it times, and where), the time in mono at 1.125rem with tabular figures in `--accent-amber`, then its controls as icon buttons (pause, +1 min, stop), each still 44px. Paused, the time turns `--text-dim`. Done, the chip takes an `--accent-bright` border and a 14% wash that breathes slowly and rattles like a kitchen timer while the alarm is due, unless reduced motion is set. Timer chips sit in a row that wraps, pinned at the top of the screen while any is left. The time is never the only signal that a timer has ended: the system notification and a toast say it in words (§15).
+A running countdown (Mise's cooking timers): a chip with a two-line label in `--text-dim` (what it times, and where), the time in mono at 1.125rem with tabular figures in `--accent-amber`, then its controls as icon buttons (pause, +1 min, stop), each still 44px. Paused, the time turns `--text-dim`. Done, the chip takes an `--accent-bright` border and a 14% wash that breathes slowly while its time rattles like a kitchen timer (the buttons hold still) as long as the alarm is due, unless reduced motion is set. Timer chips sit in a row that wraps, pinned at the top of the screen while any is left. The time is never the only signal that a timer has ended: the system notification and a toast say it in words (§15).
 
 ### 8.20 Loading indicator
 
