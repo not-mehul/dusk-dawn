@@ -28,6 +28,10 @@
       "svelte": "./svelte/index.js",
       "default": "./svelte/index.js"
     },
+    "./expressive": {
+      "types": "./svelte/expressive.d.ts",
+      "default": "./svelte/expressive.js"
+    },
     "./tokens.css": "./css/tokens.css",
     "./components.css": "./css/components.css",
     "./tokens.json": "./tokens.json",

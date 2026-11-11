@@ -208,7 +208,7 @@ export function celebrate(options = {}) {
       piece.textContent = glyph;
       piece.style.color = colour;
     } else {
-      const size = 6 + Math.random() * 8;
+      const size = 8 + Math.random() * 8;
       piece.style.width = `${size}px`;
       piece.style.height = `${size}px`;
       piece.style.background = colour;

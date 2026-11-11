@@ -25,6 +25,9 @@ npm install --save-dev github:not-mehul/dusk-dawn#v2.0.0
 ```
 
 ```ts
+// In a plain .ts module (state, platform code), import the helpers without the components:
+import { celebrate, createEggs } from 'dusk-dawn/expressive';
+// In components:
 import { LoadingIndicator, Switch, TabRail, ThemeToggle, Toast, WavyProgress, celebrate, konami } from 'dusk-dawn';
 ```
 
