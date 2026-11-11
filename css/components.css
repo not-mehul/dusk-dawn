@@ -448,8 +448,9 @@ button {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  min-height: 36px;
-  padding: 0 0.75rem;
+  /* A touch target (§14): 44px, never the 36px it used to be. */
+  min-height: 44px;
+  padding: 0 0.875rem;
   border: 1px solid var(--border-soft);
   border-radius: var(--corner-sm);
   background: var(--chip-bg);

@@ -403,7 +403,7 @@ Only one primary button per screen. The FAB counts as that screen's primary.
 
 | Kind | Look | Use |
 |---|---|---|
-| **Option chip** | `--chip-bg`, 1px `--border-soft`, `--text-muted`, `--corner-sm`. Selected: `--accent-bright` fill, `--on-accent` text, morphs to a pill | Repeatable filters and quick picks |
+| **Option chip** | 44px tall (a full touch target), `--chip-bg`, 1px `--border-soft`, `--text-muted`, `--corner-sm`. Selected: `--accent-bright` fill, `--on-accent` text, morphs to a pill | Repeatable filters and quick picks |
 | **Tag chip** | `rgba(amber, 0.14)` fill, 1px `--border-soft`, `--text-heading`, optional × | User tags and collections |
 | **Status chip** | Mono 0.625rem caps, 1px tinted border, no fill. Sage = done or active, amber = in progress, dim = planned | Reading or watching status, booking state |
 | **Count badge** | Mono 0.625rem, `rgba(amber,0.15)` fill, `--accent-amber` text, pill | Counts on tabs |
@@ -846,6 +846,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 **Added in 2.1.0**
 
 - `--modal-bg` is opaque in both themes (`#14110e`, `#fcf8f0`). At 96–98% the library showed through modals and toasts.
+- Option chips are 44px tall, the touch-target minimum (§14). They were 36px.
 - Icon tabs (§8.5.1): `IconTabs`, with `.icon-tabs`, for top-level sections that share the width evenly, from Mise.
 
 **Decided**
