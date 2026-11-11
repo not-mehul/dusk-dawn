@@ -207,11 +207,11 @@ Graphics are the one place where colour carries meaning instead of emphasis, so 
 
 | Token | Dusk | Dawn |
 |---|---|---|
-| `--map-water` | `#0b1114` | `#d7e0e0` |
-| `--map-land` | `#262220` | `#f6efe2` |
-| `--map-coast` | `rgba(120,113,108,0.54)` | `rgba(147,138,124,0.6)` |
-| `--map-grid` | `rgba(120,113,108,0.2)` | `rgba(120,105,80,0.25)` |
-| `--map-visited` | `rgba(212,165,116,0.32)` | `rgba(176,125,62,0.28)` |
+| `--map-water` | `#0e1316` | `#d7e0e0` |
+| `--map-land` | `#332d28` | `#f6efe2` |
+| `--map-coast` | `rgba(168,162,158,0.5)` | `rgba(147,138,124,0.6)` |
+| `--map-grid` | `rgba(168,162,158,0.1)` | `rgba(120,105,80,0.25)` |
+| `--map-visited` | `rgba(212,165,116,0.45)` | `rgba(176,125,62,0.28)` |
 | `--map-route` | `#d4a574` | `#815c2d` |
 
 **Camera.** The barcode scanner's viewfinder is black in both themes, because the camera image needs it. `--scanner-bg: #000`, `--scanner-fg: #fff` and `--scanner-scrim: rgba(0,0,0,0.45)` are the only pure black and white in the system, and they are defined once and shared by both themes.
@@ -847,6 +847,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 
 - `--modal-bg` is opaque in both themes (`#14110e`, `#fcf8f0`). At 96–98% the library showed through modals and toasts.
 - Option chips are 44px tall, the touch-target minimum (§14). They were 36px.
+- Dusk map colours: land is lifted to `#332d28` off near-black water `#0e1316`, and the coast, grid and visited fill are retuned so countries read clearly. Before, land and water sat at about 1.2:1 and the teal water looked cold against the warm theme.
 - Icon tabs (§8.5.1): `IconTabs`, with `.icon-tabs`, for top-level sections that share the width evenly, from Mise.
 
 **Decided**

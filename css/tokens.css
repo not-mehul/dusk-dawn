@@ -118,11 +118,11 @@
   --series-4: rgba(245,236,217,0.35);
   --chart-grid: rgba(120,113,108,0.2);
   --chart-track: rgba(68,64,60,0.5);
-  --map-water: #0b1114;
-  --map-land: #262220;
-  --map-coast: rgba(120,113,108,0.54);
-  --map-grid: rgba(120,113,108,0.2);
-  --map-visited: rgba(212,165,116,0.32);
+  --map-water: #0e1316;
+  --map-land: #332d28;
+  --map-coast: rgba(168,162,158,0.5);
+  --map-grid: rgba(168,162,158,0.1);
+  --map-visited: rgba(212,165,116,0.45);
   --map-route: #d4a574;
   --scanner-bg: #000000;
   --scanner-fg: #ffffff;
