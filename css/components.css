@@ -1493,23 +1493,27 @@ button.notice > .notice-chevron {
 .dd-stagger > :nth-child(11) { --dd-i: 10; }
 .dd-stagger > :nth-child(12) { --dd-i: 11; }
 
-/* Cards and rows that are a whole target give a little under the finger. */
-.dd-pressable {
+/* Cards and rows that are a whole target give a little under the finger,
+   and lift towards a fine pointer on hover. The doubled class outranks an
+   app's own card rule, so the transition list here carries the usual card
+   colour changes too. */
+.dd-pressable.dd-pressable,
+.dd-lift.dd-lift {
   transition:
-    transform var(--spring-spatial-fast-dur) var(--spring-spatial-fast),
-    border-radius var(--spring-spatial-fast-dur) var(--spring-spatial-fast);
+    background-color var(--spring-effects-fast-dur) var(--spring-effects-fast),
+    border-color var(--spring-effects-fast-dur) var(--spring-effects-fast),
+    color var(--spring-effects-fast-dur) var(--spring-effects-fast),
+    box-shadow var(--spring-effects-default-dur) var(--spring-effects-default),
+    border-radius var(--spring-spatial-fast-dur) var(--spring-spatial-fast),
+    transform var(--spring-spatial-default-dur) var(--spring-spatial-default);
 }
-.dd-pressable:active {
-  transform: scale(0.98);
-}
-/* A card lifts towards the pointer on hover (fine pointers only). */
 @media (hover: hover) and (pointer: fine) {
-  .dd-lift {
-    transition: transform var(--spring-spatial-default-dur) var(--spring-spatial-default);
-  }
-  .dd-lift:hover {
+  .dd-lift.dd-lift:hover {
     transform: translateY(-3px) rotate(var(--dd-tilt, -0.4deg));
   }
+}
+.dd-pressable.dd-pressable:active {
+  transform: scale(0.98);
 }
 
 /* One-shot flourishes, played with play(node, 'wiggle') from the package. */
@@ -1713,8 +1717,8 @@ button.notice > .notice-chevron {
   .fab:active,
   .chip:active,
   .segmented button:active,
-  .dd-pressable:active,
-  .dd-lift:hover,
+  .dd-pressable.dd-pressable:active,
+  .dd-lift.dd-lift:hover,
   .fab:hover svg,
   .btn:hover:not(:disabled) svg {
     transform: none;
