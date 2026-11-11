@@ -857,7 +857,7 @@ Everything in this document that can be code lives in one package, **`dusk-dawn`
 | `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, segmented control, tab rail, modal, sheet, toast, notice, empty states, switch row, timer chip, step type, loading indicator, wavy progress, delight utilities and the Expressive motion |
 | `fonts/` | Fraunces, normal and italic, with its licence (§5.1) |
 | `LoadingIndicator`, `Switch`, `TabRail`, `ThemeToggle`, `Toast`, `WavyProgress` | The Svelte components every app shares (§8.20, §8.18, §8.5, §8.9, §8.12, §8.21) |
-| `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, `shapeClipPath`, `spring` | The Expressive helpers (§6.4, §11) |
+| `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, `shapeClipPath`, `spring` | The Expressive helpers (§6.4, §11), from `dusk-dawn` in components or `dusk-dawn/expressive` in plain modules |
 | `dusk-dawn` command | `check` (contrast), `colours` (no literal colours in an app), `css` and `kotlin` (theme files for other targets) |
 | `style.md` | This document |
 
