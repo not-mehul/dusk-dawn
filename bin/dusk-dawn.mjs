@@ -107,6 +107,37 @@ function contrast() {
   console.log(`Contrast check passed: ${count} pairs in ${THEMES.length} themes.`);
 }
 
+// ---------- springs (style.md §11) ----------
+// A Material 3 Expressive spring (unit mass, a damping ratio and a stiffness)
+// becomes a CSS linear() easing sampled over the time it takes to settle
+// within 0.1% of its target, so CSS, Svelte and Compose all move alike.
+
+const entries = (group = {}) => Object.entries(group).filter(([k]) => !k.startsWith('$'));
+
+function springAt(t, zeta, w0) {
+  if (zeta < 1) {
+    const wd = w0 * Math.sqrt(1 - zeta * zeta);
+    return 1 - Math.exp(-zeta * w0 * t) * (Math.cos(wd * t) + ((zeta * w0) / wd) * Math.sin(wd * t));
+  }
+  return 1 - Math.exp(-w0 * t) * (1 + w0 * t);
+}
+
+export function spring(zeta, stiffness) {
+  const w0 = Math.sqrt(stiffness);
+  // Settling time: the last moment the spring is more than 0.1% from rest.
+  const step = 0.001;
+  let settle = 0;
+  for (let t = 0; t < 5; t += step) if (Math.abs(1 - springAt(t, zeta, w0)) > 0.001) settle = t;
+  const duration = Math.max(10, Math.ceil((settle * 1000) / 10) * 10);
+  const samples = 32;
+  const points = [];
+  for (let i = 0; i <= samples; i++) {
+    const v = i === samples ? 1 : springAt((i / samples) * (duration / 1000), zeta, w0);
+    points.push(String(Math.round(v * 1000) / 1000));
+  }
+  return { easing: `linear(${points.join(', ')})`, duration };
+}
+
 // ---------- CSS ----------
 
 function css() {
@@ -125,8 +156,12 @@ function css() {
   }
   out.push(':root {');
   for (const [k, v] of Object.entries(tokens.font)) out.push(`  --font-${k}: ${v};`);
-  for (const group of ['space', 'radius', 'motion', 'layout']) {
-    for (const [k, v] of Object.entries(tokens[group])) out.push(`  --${k}: ${v};`);
+  for (const group of ['space', 'radius', 'shape', 'weight', 'motion', 'layout']) {
+    for (const [k, v] of entries(tokens[group])) out.push(`  --${k}: ${v};`);
+  }
+  for (const [k, { dampingRatio, stiffness }] of entries(tokens.spring)) {
+    const { easing, duration } = spring(dampingRatio, stiffness);
+    out.push(`  --spring-${k}: ${easing};`, `  --spring-${k}-dur: ${duration}ms;`);
   }
   out.push('}', '');
   for (const theme of THEMES) {
@@ -161,6 +196,12 @@ function kotlin(name) {
     for (const [k, v] of Object.entries(tokens.number)) out.push(`    const val ${screaming(k)} = ${v[theme]}f`);
     out.push('}', '');
   }
+  out.push('// Material 3 Expressive springs: spring(dampingRatio, stiffness) in Compose.');
+  out.push('internal object SpringTokens {');
+  for (const [k, { dampingRatio, stiffness }] of entries(tokens.spring)) {
+    out.push(`    const val ${screaming(k)}_DAMPING = ${dampingRatio}f`, `    const val ${screaming(k)}_STIFFNESS = ${stiffness}f`);
+  }
+  out.push('}', '');
   return out.join('\n');
 }
 

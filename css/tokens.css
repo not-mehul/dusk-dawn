@@ -1,4 +1,4 @@
-/* Generated from tokens.json by dusk-dawn 1.1.0. Do not edit. */
+/* Generated from tokens.json by dusk-dawn 2.0.0. Do not edit. */
 
 @font-face {
   font-family: "Fraunces";
@@ -27,8 +27,21 @@
   --space-5: 24px;
   --space-6: 40px;
   --space-7: 56px;
-  --radius: 2px;
+  --radius: 12px;
   --radius-round: 50%;
+  --corner-none: 0px;
+  --corner-xs: 4px;
+  --corner-sm: 8px;
+  --corner-md: 12px;
+  --corner-lg: 16px;
+  --corner-lg-plus: 20px;
+  --corner-xl: 28px;
+  --corner-xl-plus: 32px;
+  --corner-2xl: 48px;
+  --corner-full: 999px;
+  --weight-regular: 400;
+  --weight-emphasized: 600;
+  --weight-heavy: 760;
   --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --dur-hover: 150ms;
@@ -36,9 +49,25 @@
   --dur-settle: 260ms;
   --dur-enter: 320ms;
   --dur-exit: 160ms;
+  --press-scale: 0.95;
+  --dur-celebrate: 1400ms;
   --max-width: 880px;
   --breakpoint-narrow: 640px;
   --breakpoint-wide: 900px;
+  --spring-spatial-fast: linear(0, 0.044, 0.154, 0.3, 0.458, 0.611, 0.748, 0.862, 0.952, 1.017, 1.06, 1.085, 1.094, 1.093, 1.084, 1.071, 1.056, 1.042, 1.028, 1.016, 1.007, 1, 0.995, 0.993, 0.991, 0.991, 0.992, 0.993, 0.994, 0.996, 0.997, 0.998, 1);
+  --spring-spatial-fast-dur: 360ms;
+  --spring-spatial-default: linear(0, 0.031, 0.108, 0.209, 0.321, 0.434, 0.54, 0.636, 0.719, 0.79, 0.848, 0.895, 0.932, 0.959, 0.98, 0.994, 1.004, 1.01, 1.014, 1.015, 1.015, 1.014, 1.013, 1.011, 1.009, 1.008, 1.006, 1.005, 1.004, 1.003, 1.002, 1.001, 1);
+  --spring-spatial-default-dur: 440ms;
+  --spring-spatial-slow: linear(0, 0.03, 0.106, 0.206, 0.317, 0.428, 0.533, 0.629, 0.713, 0.784, 0.843, 0.89, 0.927, 0.956, 0.977, 0.992, 1.003, 1.009, 1.013, 1.015, 1.015, 1.014, 1.013, 1.012, 1.01, 1.008, 1.007, 1.005, 1.004, 1.003, 1.002, 1.002, 1);
+  --spring-spatial-slow-dur: 600ms;
+  --spring-spatial-calm: linear(0, 0.03, 0.102, 0.197, 0.3, 0.403, 0.5, 0.588, 0.665, 0.732, 0.788, 0.835, 0.873, 0.904, 0.928, 0.947, 0.962, 0.973, 0.982, 0.988, 0.993, 0.996, 0.998, 1, 1.001, 1.001, 1.001, 1.002, 1.001, 1.001, 1.001, 1.001, 1);
+  --spring-spatial-calm-dur: 320ms;
+  --spring-effects-fast: linear(0, 0.035, 0.115, 0.215, 0.321, 0.424, 0.517, 0.6, 0.672, 0.733, 0.784, 0.826, 0.861, 0.889, 0.912, 0.93, 0.945, 0.957, 0.966, 0.973, 0.979, 0.984, 0.987, 0.99, 0.992, 0.994, 0.995, 0.996, 0.997, 0.998, 0.998, 0.999, 1);
+  --spring-effects-fast-dur: 150ms;
+  --spring-effects-default: linear(0, 0.037, 0.122, 0.228, 0.337, 0.442, 0.537, 0.62, 0.692, 0.751, 0.801, 0.841, 0.874, 0.901, 0.922, 0.939, 0.952, 0.963, 0.971, 0.978, 0.983, 0.987, 0.99, 0.992, 0.994, 0.995, 0.996, 0.997, 0.998, 0.998, 0.999, 0.999, 1);
+  --spring-effects-default-dur: 240ms;
+  --spring-effects-slow: linear(0, 0.035, 0.116, 0.218, 0.325, 0.428, 0.522, 0.605, 0.677, 0.737, 0.788, 0.83, 0.864, 0.892, 0.914, 0.932, 0.947, 0.958, 0.967, 0.974, 0.98, 0.984, 0.988, 0.991, 0.993, 0.994, 0.996, 0.997, 0.997, 0.998, 0.998, 0.999, 1);
+  --spring-effects-slow-dur: 330ms;
 }
 
 :root, [data-theme="dark"] {
