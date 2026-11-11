@@ -4,7 +4,9 @@ The shared design system for **Waymark**, **BookShelf**, **Ledger**, **Colophon*
 
 One design language, two themes. **Dusk** is the dark theme: serif display type over a near-black surface with ambient amber and sage glows, like a late-night reading room. **Dawn** is the light theme: the same type and structure on warm paper cream, like a sunlit study rather than a sterile dashboard.
 
-Both themes use generous whitespace, restrained ornament, monospace for anything data-flavoured, and sharp 2px corners. Dawn is not a light mode bolted on. Both themes come from a single set of semantic tokens.
+Both themes use generous whitespace, monospace for anything data-flavoured, and **Material 3 Expressive** shape and motion: soft corners from a shape scale that morph under the finger, springs for everything that moves, and a few moments of real delight hidden in every app. Dawn is not a light mode bolted on. Both themes come from a single set of semantic tokens.
+
+**2.0.0 is the Expressive release.** The palette, type families and voice are unchanged: still a reading room, not a toy shop. What changed is how things feel in the hand. Corners round, presses squish, numbers count up, and finishing something worth finishing gets a celebration. Every bit of it switches off with reduced motion (§11, §15).
 
 This version merges the original reference with what each app worked out on its own: Waymark's component and interaction rules, Ledger's contrast-tuned Dawn accents and score tiers, and BookShelf's token naming and empty states. Section 17 lists every change from the original.
 
@@ -17,8 +19,9 @@ This version merges the original reference with what each app worked out on its 
 3. **Accents are seasoning.** An italic word, a number, an icon tint, the one active control. Never a whole surface.
 4. **One question at a time.** Forms ask in the order the answers arrive. A choice that needs explaining gets a sentence next to it, never a tooltip.
 5. **Pick, don't type.** Dates, times, places, ratings and categories are chosen from a control. Free text is for names and notes.
-6. **Motion is responsiveness, not decoration.** Nothing bounces and nothing animates on load.
+6. **Motion has a spring in its step.** Everything that moves rides a Material 3 Expressive spring from `tokens.json`. Spatial springs (position, size, shape) may overshoot a little; effects springs (colour, opacity) never do. Motion answers the reader or marks an achievement: it never loops for decoration and never makes anyone wait (§11).
 7. **It works with the radio off.** Fonts are bundled, never fetched, and nothing the UI needs to draw itself touches the network.
+8. **Leave something to find.** Every app hides a few easter eggs and celebrates real accomplishments (§11.3). Delight is a reward, never an obstacle: an easter egg never blocks, hides or changes data, and the app works the same for someone who never finds one.
 
 ---
 
@@ -259,9 +262,9 @@ Type is identical in both themes. Only colour changes.
 | Body sans | `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif` | Paragraphs, buttons, form values |
 | Mono | `ui-monospace, "SF Mono", Menlo, Consolas, "Roboto Mono", "Liberation Mono", monospace` | Eyebrows, labels, codes, times, counts, numeric inputs |
 
-Serif is always weight 400, with `letter-spacing: -0.01em`. An italic variant carries emphasis: one italic word inside a headline, set in `--accent-amber`. Italic is also the voice of section headings and hints.
+Serif is weight 400 (`--weight-regular`), with `letter-spacing: -0.01em`. The Expressive **emphasized** voice is `--weight-emphasized` (600): use it for one hero number or word per screen (a perfect score, a finished count, a celebration line), never for running text. `--weight-heavy` (760) is only for the italic word inside an emphasized display line. An italic variant carries emphasis: one italic word inside a headline, set in `--accent-amber`. Italic is also the voice of section headings and hints.
 
-**Fraunces is bundled.** Each app ships the Fraunces variable font (Latin subset, upright and italic, about 150 KB together, SIL Open Font License) as local WOFF2 files, so the serif looks the same on Android and iOS and still needs no network. The system serifs remain as fallbacks while the font loads (`font-display: swap`). Use weight 400 only; the optical-size axis adjusts itself to the font size.
+**Fraunces is bundled.** Each app ships the Fraunces variable font (Latin subset, upright and italic, about 150 KB together, SIL Open Font License) as local WOFF2 files, so the serif looks the same on Android and iOS and still needs no network. The system serifs remain as fallbacks while the font loads (`font-display: swap`). Use the weight tokens only; the optical-size axis adjusts itself to the font size.
 
 ### 5.2 Scale
 
@@ -285,6 +288,7 @@ Sizes are in `rem` on a 16px root. Never shrink the root on mobile.
 | Section label | 0.6875rem, tracked 0.25em, caps | Mono | `--text-dim`. Eyebrows, section markers, tab rail |
 | Field label | 0.625rem, tracked 0.2em, caps | Mono | `--text-dim`. Above every field |
 | Hint / footnote | 0.8125rem / 1.55 | Serif italic | `--text-dim` |
+| Display emphasized | 3.5rem / 1, `-0.03em` | Serif 600 | `.t-display-emphasized`; the italic word goes 760 in `--accent-amber`. Celebrations, year-in-review, a perfect score |
 | Step | `clamp(1.625rem, 4.5vw + 0.5rem, 2.5rem)` / 1.35 | Serif | `--text-heading`. One instruction at a time, read from arm's length: Mise's cooking mode (`.t-step`) |
 
 All-caps tracked mono is the core motif: eyebrows, labels, tabs and section markers. Never set all-caps at body size, and never track lowercase text.
@@ -322,7 +326,22 @@ Use `font-variant-numeric: tabular-nums` wherever numbers line up in a column: t
 
 ### 6.4 Shape
 
-**Border radius is 2px everywhere**: panels, buttons, inputs, chips, badges, modals, sheets, FABs, thumbnails and share cards. No pills and no rounded cards. The only round things are things that are round: the dial, avatars, radio dots and map markers.
+Shapes follow the **Material 3 Expressive corner scale**, as tokens:
+
+| Token | Value | Used for |
+|---|---|---|
+| `--corner-xs` | 4px | Inner segments of a connected button group, tiny marks |
+| `--corner-sm` | 8px | Inputs, option chips at rest, thumbnails |
+| `--corner-md` | 12px | Notices, rows, a pressed button (`--radius` is the same 12px for app-local surfaces) |
+| `--corner-lg` | 16px | Panels, cards, hairline grids, toasts, the FAB at rest |
+| `--corner-lg-plus` | 20px | Segmented track, timer chips |
+| `--corner-xl` | 28px | Modals, sheets (top corners), empty states, the FAB on hover |
+| `--corner-xl-plus` / `--corner-2xl` | 32px / 48px | Hero art, share-card frames, large expressive surfaces |
+| `--corner-full` | pill | Buttons, icon buttons, badges, status chips, selected chips, switches, the theme toggle, meters |
+
+**Shapes morph.** A control changes shape to show its state, on the fast spatial spring: a pressed button squares off from a pill to `--corner-md`; a selected chip rounds from `--corner-sm` to a pill; the chosen segment of a segmented control becomes a pill while its neighbours stay squarer; the FAB rounds towards a circle under the pointer. Morph the corner radius, never the size of the hit target.
+
+**The Expressive shape set** (`SHAPES` in the package: circle, cookies 4 to 12, sunny, clover, flower, soft burst, puffy, triangle, square, pentagon, diamond, gem, heart) is for decoration and identity only: the loading indicator, confetti, avatars and shaped thumbnails (`shapeClipPath()` with `.dd-shape`). Every shape is sampled with the same number of points, so any one can morph into any other. Never clip text or a control into a shape.
 
 ---
 
@@ -335,7 +354,7 @@ Use `font-variant-numeric: tabular-nums` wherever numbers line up in a column: t
   background: var(--panel-bg);
   backdrop-filter: blur(4px);
   border: 1px solid var(--border-soft);
-  border-radius: 2px;
+  border-radius: var(--corner-lg);
   padding: 1.5rem;
 }
 ```
@@ -351,9 +370,9 @@ There are two list forms. Pick by content, and use the same form for the same co
 - **Card**: a panel with an optional thumbnail, a serif title, a mono metadata line and at most one trailing figure (score, rating, time). Use for things with a picture or a figure: a book, a city, a stay.
 - **Row**: no panel. Rows are separated by `--border-faint` hairlines inside one panel. Use for long homogeneous lists: episodes, timeline items, settings, search results.
 
-A tappable card or row gets `--hover-bg` on hover and press, never a lift, shadow or scale. A trailing chevron (`chevron-right`, `--text-faint`) means it opens a screen. No chevron means it acts in place.
+A tappable card or row gets `--hover-bg` on hover and press, and gives a little under the finger (`.dd-pressable`). Cards may lift on hover with a fine pointer (`.dd-lift`); rows never do. A trailing chevron (`chevron-right`, `--text-faint`) means it opens a screen. No chevron means it acts in place.
 
-Thumbnails are 2px-cornered, `--border-faint` outlined, at a fixed aspect ratio (2:3 posters and covers, 1:1 places). Placeholders are `--panel-bg-faint` with a centred `--text-faint` icon.
+Thumbnails have `--corner-sm` corners (covers and posters keep a book's squarer `--corner-xs` spine side if the app draws one), `--border-faint` outlined, at a fixed aspect ratio (2:3 posters and covers, 1:1 places). Placeholders are `--panel-bg-faint` with a centred `--text-faint` icon.
 
 ---
 
@@ -363,7 +382,7 @@ The canonical set. Each app implements exactly these, with these names, so a rea
 
 ### 8.1 Buttons
 
-All buttons share one height (44px minimum touch target, 40px visual on dense desktop rows), a 2px radius, and the button label style (caps, tracked 0.15em, 500 weight).
+All buttons share one height (44px minimum touch target, 40px visual on dense desktop rows), a pill shape (`--corner-full`) that morphs to `--corner-md` and gives to `--press-scale` while pressed, and the button label style (caps, tracked 0.15em, 500 weight).
 
 | Variant | Rest | Hover / press | Use |
 |---|---|---|---|
@@ -372,7 +391,7 @@ All buttons share one height (44px minimum touch target, 40px visual on dense de
 | **Muted** | Transparent, 1px `--border`, `--text-dim` text | Text `--text-heading`, border `--text-dim` | Back, Cancel, Skip |
 | **Danger** | Transparent, 1px `--danger` border and text | Fill `--danger`, text `--on-danger` | Delete. Outlined, never filled at rest (Waymark) |
 | **Icon** | No fill or border, `--text-dim` icon | `--text-heading` | Close, overflow, fullscreen |
-| **FAB** | 56px square, `--accent-bright`, `--on-accent` icon, glow plus soft shadow | `--accent-bright-hover` | The single "add" action of a top-level screen |
+| **FAB** | 56px, `--corner-lg`, `--accent-bright`, `--on-accent` icon, glow plus soft shadow | `--accent-bright-hover`; rounds to `--corner-xl` and the icon turns 90° on hover; a full circle under the finger | The single "add" action of a top-level screen |
 
 Disabled: `--disabled-bg` fill, `--text-faint` text, no glow, no border colour.
 
@@ -384,10 +403,10 @@ Only one primary button per screen. The FAB counts as that screen's primary.
 
 | Kind | Look | Use |
 |---|---|---|
-| **Option chip** | `--chip-bg`, 1px `--border-soft`, `--text-muted`. Selected: `--accent-bright` fill, `--on-accent` text | Repeatable filters and quick picks |
+| **Option chip** | `--chip-bg`, 1px `--border-soft`, `--text-muted`, `--corner-sm`. Selected: `--accent-bright` fill, `--on-accent` text, morphs to a pill | Repeatable filters and quick picks |
 | **Tag chip** | `rgba(amber, 0.14)` fill, 1px `--border-soft`, `--text-heading`, optional × | User tags and collections |
 | **Status chip** | Mono 0.625rem caps, 1px tinted border, no fill. Sage = done or active, amber = in progress, dim = planned | Reading or watching status, booking state |
-| **Count badge** | Mono 0.625rem, `rgba(amber,0.15)` fill, `--accent-amber` text, **2px radius** | Counts on tabs |
+| **Count badge** | Mono 0.625rem, `rgba(amber,0.15)` fill, `--accent-amber` text, pill | Counts on tabs |
 
 ### 8.3 Choice cards (Waymark)
 
@@ -395,22 +414,22 @@ A choice that explains itself: icon, word and one sentence ("Ground: taxis, trai
 
 ### 8.4 Segmented control
 
-A container with 1px `--border` over `--panel-bg-faint`. Inactive options are `--text-muted`, with `--hover-bg` on hover. **The active option is `--accent-bright` with `--on-accent` text and weight 500**, never `--text-strong` as a fill. Use it for two to four short, mutually exclusive options, such as a sort order or the theme setting. Past four options, use a tab rail or a picker.
+A Material 3 Expressive **connected button group**: a `--corner-lg-plus` track with 1px `--border` over `--panel-bg-faint`; inner segments have `--corner-xs` corners and the two ends are round. Inactive options are `--text-muted`, with `--hover-bg` on hover. **The active option is `--accent-bright` with `--on-accent` text and weight 500, and morphs into a pill**, never `--text-strong` as a fill. Use it for two to four short, mutually exclusive options, such as a sort order or the theme setting. Past four options, use a tab rail or a picker.
 
 ### 8.5 Tab rail (Waymark and BookShelf)
 
 Top-level and in-screen navigation. **One pattern in all three apps**, replacing Ledger's boxed tab grid.
 
 - Words in the section label style (mono, caps, 0.25em) on a 1px `--border-soft` baseline.
-- Inactive tabs are `--text-dim`, and `--text-heading` on hover. The active tab is `--text-heading` with a **2px `--accent-amber` rule** under the word.
-- The rule slides between tabs (260ms settle). Nothing else moves.
+- Inactive tabs are `--text-dim`, and `--text-heading` on hover. The active tab is `--text-heading` with a **3px `--accent-amber` rule, rounded on top,** under the word.
+- The rule springs between tabs: its position on the fast spatial spring and its width on the default one, so it stretches a little as it travels. Nothing else moves.
 - Horizontally scrollable when it overflows, with no visible scrollbar. Keep the active tab in view.
 - A count badge may follow a label.
 - Placed under the page header. **No bottom navigation bar.** These apps have three to five top-level sections and a FAB, and the tab rail keeps the editorial top-of-page structure.
 
 ### 8.6 Inputs
 
-- `--input-bg` fill, 1px `--border`, 2px radius, padding `0.6875rem 0.875rem`, text `--text-strong`.
+- `--input-bg` fill, 1px `--border`, `--corner-sm`, padding `0.6875rem 0.875rem`, text `--text-strong`. An open picker field rounds to `--corner-md`.
 - Focus: the border becomes `--accent-amber`, plus the focus ring for keyboard focus.
 - Placeholder: serif italic in `--text-faint`.
 - Mono face for numbers, codes, times, ISBNs and flight numbers. Use `inputmode` to bring up the right keyboard.
@@ -420,7 +439,7 @@ Top-level and in-screen navigation. **One pattern in all three apps**, replacing
 
 **Pickers** (Waymark). Date, time, month and zone fields are tappable fields shaped exactly like a text input (same height, border and padding) that open a picker modal. Calendars and clocks share one six-wide grid. A picker never changes a value unless the reader presses Choose.
 
-**Slider** (Ledger metric slider). Track `--chart-track` 4px, fill `--accent-amber`, square 16px thumb in `--accent-bright` with a 1px `--on-accent` ring. Live value in serif to the right.
+**Slider** (Ledger metric slider). Track `--chart-track` 4px, fill `--accent-amber`, round 16px thumb in `--accent-bright` with a 1px `--on-accent` ring. Live value in serif to the right.
 
 **Rating** (BookShelf). Half-star input, 26px Lucide stars, empty `--text-faint`, filled `--accent-bright`. Read-only ratings in lists use 14px stars in `--accent-amber`.
 
@@ -429,7 +448,7 @@ Top-level and in-screen navigation. **One pattern in all three apps**, replacing
 For creating anything with more than four fields: a city entry, a book, a booking.
 
 - One question per screen, asked plainly as a serif heading ("Where did you stay?"), with no field label under it.
-- A progress rail at the top: one 2px segment per step, `--accent-amber` up to the current step, `--chart-track` after. Segments are tappable to go back. No "2 of 4" text.
+- A progress rail at the top: one 4px pill segment per step, springing to its colour, `--accent-amber` up to the current step, `--chart-track` after. Segments are tappable to go back. No "2 of 4" text.
 - A footer with Back (muted) on the left and Next (primary) on the right, equal width. The last step's forward action commits ("Save").
 - Answers live in the flow's state and survive going back and forth. Dismissing saves nothing.
 - Editing an existing item uses a single scrolling form with the same fields, not a step flow.
@@ -443,17 +462,17 @@ One line: back control, title and at most one action, on a shared baseline.
 
 ### 8.9 Theme toggle
 
-A 2px-cornered track (`--input-bg`, 1px `--border`) holding a moon and a sun, with a sliding `--accent-amber` knob. The icon under the knob is `--on-accent`, the other is `--text-faint`. The knob moves on a 220ms `cubic-bezier(0.4,0,0.2,1)`. `role="switch"`, operable by Space and Enter, with `aria-checked` showing Dawn. Geometry is derived from three numbers (track, knob and inset), so each icon sits exactly under the knob.
+A pill track (`--input-bg`, 1px `--border`) holding a moon and a sun, with a round sliding `--accent-amber` knob. The icon under the knob is `--on-accent`, the other is `--text-faint`. The knob moves on the fast spatial spring and squashes slightly under the finger; the sun's rays turn 90° as Dawn arrives and the moon tips as Dusk does. `role="switch"`, operable by Space and Enter, with `aria-checked` showing Dawn. Geometry is derived from three numbers (track, knob and inset), so each icon sits exactly under the knob.
 
 ### 8.10 Modal
 
 Use it for focused tasks and confirmations that need attention: pickers, confirm dialogs, share previews, details on desktop.
 
-- Centred card on `--modal-backdrop`. `--modal-bg` fill, 1px `rgba(amber,0.3)` border, 2px radius, max width 560px, padding 1.75rem.
+- Centred card on `--modal-backdrop`. `--modal-bg` fill, 1px `rgba(amber,0.3)` border, `--corner-xl`, max width 560px, padding 1.75rem.
 - Shadow: `0 30px 80px rgba(var(--shadow-rgb), calc(0.7 * var(--shadow-strength))), 0 0 80px rgba(var(--accent-amber-rgb), 0.18), inset 0 1px 0 rgba(var(--cream-rgb), 0.05)`.
-- Decorative 1px corner brackets in `rgba(amber, 0.5)`, drawn over the card so they never affect layout.
+- Decorative 1px corner brackets in `rgba(amber, 0.5)`, inset 14px with a soft inner corner, drawn over the card so they never affect layout.
 - Header: optional eyebrow, then serif italic title, then the close icon button.
-- Entrance: fade plus `translateY(12px) scale(0.98)` to rest, **320ms** settle easing. Exit: 160ms fade.
+- Entrance: fade plus `translateY(12px) scale(0.98)` to rest on the default spatial spring. Exit: 160ms fade.
 - Dismiss with the close button, a backdrop tap, Escape or system back. On Android, the predictive back gesture shrinks it to 0.9 and fades to 0.7 under the finger.
 - Use the native `<dialog>` with `showModal()`, so focus trapping and `inert` come for free.
 
@@ -463,20 +482,21 @@ Use it for focused tasks and confirmations that need attention: pickers, confirm
 
 Use it for longer forms, settings and filters on phones.
 
-- Rises from the bottom, full width up to 560px, max height 90dvh, scrolls inside. Opaque `--sheet-bg`, 1px `--border-soft` top border, top corners 2px.
-- A 32×3px `--border` grab handle centred at the top.
+- Rises from the bottom, full width up to 560px, max height 90dvh, scrolls inside. Opaque `--sheet-bg`, 1px `--border-soft` top border, top corners `--corner-xl`.
+- A 32×4px pill `--border` grab handle centred at the top.
 - Header row: serif italic title on the left, a muted "Close" or a primary "Save" on the right.
 - Bottom padding includes the safe-area inset.
-- Entrance: `translateY(100%)` to 0 over 320ms settle. Swipe down or system back dismisses it.
+- Entrance: `translateY(100%)` to 0 on the calm spatial spring (a sheet is full width, so it never wobbles). Swipe down or system back dismisses it.
 - At 900px and up, a sheet becomes a modal.
 
 ### 8.12 Toast and undo
 
 One component in all apps, at the bottom centre above the safe area and the FAB.
 
-- `--modal-bg`, 1px `--border`, 2px radius, padding `0.75rem 1.25rem`, body small text in `--text-body`. Max width `min(100% - 2rem, 480px)`.
+- `--modal-bg`, 1px `--border`, `--corner-lg`, padding `0.75rem 1.25rem`, body small text in `--text-body`. Max width `min(100% - 2rem, 480px)`.
 - An optional single action at the right, in the button label style in `--accent-amber`. Use "Undo" after any deletion that could be recreated.
-- Rises 16px and fades in over 260ms settle. **No overshoot.** It stays 4 seconds, or 6 with an action, and pauses while touched.
+- Rises 24px from 0.9 scale on the default spatial spring. It stays 4 seconds, or 6 with an action, and pauses while touched.
+- **Celebration toast** (`kind: 'celebrate'`): for a found easter egg or a real milestone. A bright amber border and glow, and it pops in on the slow spatial spring with a slight turn. Use it rarely, or it stops meaning anything.
 - `role="status"`, or `role="alert"` for failures.
 - One at a time: a new toast replaces the current one.
 
@@ -496,13 +516,14 @@ If tapping the banner fixes the problem ("Notifications are off. Turn on"), the 
 
 There are two kinds. Pick by cause.
 
-- **Nothing here yet** (first run, or a section never used): a panel with a dashed 1px `--border-soft` border, padding `4rem 2rem`, a 40px Lucide icon at 1.25 stroke in `--text-faint`, a serif italic title in `--text-heading` ("No cities yet"), one serif line in `--text-dim` saying what goes here, and one primary or secondary button to add the first one. (BookShelf)
+- **Nothing here yet** (first run, or a section never used): a panel with a dashed 1px `--border-soft` border and `--corner-xl`, padding `4rem 2rem`, a 40px Lucide icon at 1.25 stroke in `--text-faint` that drifts slowly (6s float, off under reduced motion), a serif italic title in `--text-heading` ("No cities yet"), one serif line in `--text-dim` saying what goes here, and one primary or secondary button to add the first one. (BookShelf)
 - **Nothing matches** (a filter or search found nothing): one line in the hint style, centred, with no panel, and a muted "Clear filter" button if a filter caused it. (Waymark)
 
 ### 8.15 Figures
 
 - **Stat tile**: `--panel-bg-faint`, 1px `--border-soft`, centred serif stat in `--text-heading` over a field label. Lay tiles out in a hairline grid.
-- **Meter / progress bar**: 4px track in `--chart-track`, fill in `--accent-sage` for completion or `--accent-amber` for a value. Animates to its value over 260ms, but only the first time it appears, not when returning from the back stack.
+- **Meter / progress bar**: 4px pill track in `--chart-track`, fill in `--accent-sage` for completion or `--accent-amber` for a value. Springs to its value (default spatial). For work in progress, use the wavy progress bar (§8.21).
+- **Hero numbers** count up on the slow spatial spring the first time they appear (`use:countUp`), in the emphasized weight if they are the one figure that matters.
 - **Score dial** (Ledger): a 270° arc. Track `--chart-track`, value stroke in the `--scale-*` token for its tier, a serif stat number in the centre, and the tier name below as a field label.
 - **Bar list** (BookShelf stats, Ledger rankings): a label on the left, a 4px bar in `--series-1`, and a mono value on the right with tabular numbers.
 
@@ -512,7 +533,7 @@ All three apps render share images (a city card, a year in review, a book, a tri
 
 - 1080×1350 (4:5) by default, and 1080×1920 for stories.
 - The theme follows the app's current theme. Read the palette from a probe element with `data-theme` set.
-- Gradient surface plus the three glows at twice the opacity, a 2px hairline frame inset 48px in `rgba(amber,0.3)`, and corner brackets.
+- Gradient surface plus the three glows at twice the opacity, a 1px hairline frame inset 48px in `rgba(amber,0.3)` with `--corner-2xl` corners, and corner brackets.
 - An eyebrow at the top (the app's name and the date), a serif title, and one hero figure.
 - A footer line in the field label style: app name on the left, a short tagline on the right. No URLs and no logos.
 
@@ -529,13 +550,21 @@ Each group starts with a section label. Rows are hairline-divided. A row's contr
 
 ### 8.18 Switch row
 
-An on/off setting is a switch row (`Switch`, `.switch-row`), from Rosetta. The whole row is one button with `role="switch"` and `aria-checked`, at least 56px tall: the label in `--text-heading` at 0.9375rem, an optional field hint under it, and the track on the right. The track is 44×26px in `--chart-track` with a 1px `--border`; on, it fills `--accent-bright` and the knob turns `--on-accent` and slides over `--dur-toggle`. Rows are divided by `--border-faint`, and the last one in a group has no rule.
+An on/off setting is a switch row (`Switch`, `.switch-row`), from Rosetta. The whole row is one button with `role="switch"` and `aria-checked`, at least 56px tall: the label in `--text-heading` at 0.9375rem, an optional field hint under it, and the track on the right. The track is 44×26px in `--chart-track` with a 1px `--border`; on, it fills `--accent-bright` and the knob turns `--on-accent`, grows from 0.75 to full size and slides on the fast spatial spring. Under the finger the knob swells. Rows are divided by `--border-faint`, and the last one in a group has no rule.
 
 Use a switch only for a setting that takes effect at once. A choice of two or more named options is a segmented control (§8.4).
 
 ### 8.19 Timer chip
 
-A running countdown (Mise's cooking timers): a chip with a two-line label in `--text-dim` (what it times, and where), the time in mono at 1.125rem with tabular figures in `--accent-amber`, then its controls as icon buttons (pause, +1 min, stop), each still 44px. Paused, the time turns `--text-dim`. Done, the chip takes an `--accent-bright` border and a 14% wash that breathes slowly while the alarm is due, unless reduced motion is set. Timer chips sit in a row that wraps, pinned at the top of the screen while any is left. The time is never the only signal that a timer has ended: the system notification and a toast say it in words (§15).
+A running countdown (Mise's cooking timers): a chip with a two-line label in `--text-dim` (what it times, and where), the time in mono at 1.125rem with tabular figures in `--accent-amber`, then its controls as icon buttons (pause, +1 min, stop), each still 44px. Paused, the time turns `--text-dim`. Done, the chip takes an `--accent-bright` border and a 14% wash that breathes slowly while its time rattles like a kitchen timer (the buttons hold still) as long as the alarm is due, unless reduced motion is set. Timer chips sit in a row that wraps, pinned at the top of the screen while any is left. The time is never the only signal that a timer has ended: the system notification and a toast say it in words (§15).
+
+### 8.20 Loading indicator
+
+Material 3 Expressive's loading indicator (`LoadingIndicator`): one `--accent-amber` shape that morphs through seven Expressive shapes (soft burst, cookie, pentagon, puffy, sunny, four-leaf cookie, gem) while it slowly turns. 48px by default; `contained` puts it on a pill of 14% amber for use over busy content such as a cover or a photo. It is a `progressbar` with a label ("Loading recipes"). Use it for waits under a few seconds with nothing to count. Under reduced motion it holds still as the first shape. Never show it for less than about 300ms: a flash of loader is worse than none.
+
+### 8.21 Wavy progress
+
+Material 3 Expressive's wavy progress bar (`WavyProgress`): a 4px rounded stroke in `--accent-amber` that ripples as a sine wave while the work goes on, over a flat `--chart-track` track with a small gap. With a `value` it fills to that fraction; without one it is indeterminate and the whole bar ripples. At 100% it flattens and turns `--accent-sage`. Use it for imports, backups, binding a book, scanning a folder: anything with a known amount of work. Under reduced motion the wave is flat.
 
 ---
 
@@ -572,30 +601,79 @@ Prefer inline SVG with `fill="var(--token)"` in Svelte markup where you can. It 
 
 ## 11. Motion
 
-Almost none. This is a deliberately calm aesthetic.
+Motion is **Material 3 Expressive**: springs, not curves. It should feel physical and a little joyful, and it always has a job: answer a touch, show where something went, or mark something worth marking.
+
+### 11.1 Springs
+
+Each spring is a damping ratio and a stiffness in `tokens.json`, the same numbers Compose uses. The build turns each into a CSS `linear()` easing and a settling duration, so CSS, Svelte and native widgets move alike:
+
+```css
+transition: transform var(--spring-spatial-fast-dur) var(--spring-spatial-fast);
+```
+
+| Spring | Damping / stiffness | Use |
+|---|---|---|
+| `spatial-fast` | 0.6 / 800 | Small things that move or change shape: press morphs, switch knobs, chips, the tab rule. A visible little bounce |
+| `spatial-default` | 0.8 / 380 | Medium things: modals and toasts arriving, cards, the FAB, meters |
+| `spatial-slow` | 0.8 / 200 | Large or playful things: celebrations, hero numbers counting up, easter eggs |
+| `spatial-calm` | 0.9 / 700 | Full-width surfaces that must not wobble: sheets, screen transitions |
+| `effects-fast` | 1 / 3800 | Colour and opacity on small things: hover, pressed wash |
+| `effects-default` | 1 / 1600 | Colour and opacity on medium things: selection fills |
+| `effects-slow` | 1 / 800 | Colour and opacity on large things: scrims, backdrops |
+
+**Spatial** springs move, resize and reshape, and may overshoot. **Effects** springs fade and recolour, and never overshoot (an overshooting colour flickers). Browsers without `linear()` fall back to `--ease-settle` and `--ease-standard` with the same durations. From JavaScript, `spring('spatial-default')` returns the easing and duration for the Web Animations API.
+
+The older tokens stay for things that aren't springs:
 
 | Token | Value | Use |
 |---|---|---|
-| `--ease-settle` | `cubic-bezier(0.16, 1, 0.3, 1)` | Everything that arrives. It decelerates into place and never overshoots |
-| `--ease-standard` | `cubic-bezier(0.4, 0, 0.2, 1)` | Toggles and things that move between two positions |
-| `--dur-hover` | 150ms | Colour and background shifts |
-| `--dur-toggle` | 220ms | Theme knob, segmented and tab indicators |
-| `--dur-settle` | 260ms | Toasts, meters, list rows settling in, tab rule |
-| `--dur-enter` | 320ms | Modals and sheets |
-| `--dur-exit` | 160ms | Anything leaving |
+| `--ease-settle` | `cubic-bezier(0.16, 1, 0.3, 1)` | Fallback for spatial springs |
+| `--ease-standard` | `cubic-bezier(0.4, 0, 0.2, 1)` | Fallback for effects springs; keyframed flourishes |
+| `--dur-hover` … `--dur-exit` | 150–320ms | Exits (160ms, ease-in: leaving things don't spring) and app code not yet on springs |
+| `--press-scale` | 0.95 | How far a pressed control gives |
+| `--dur-celebrate` | 1400ms | How long confetti flies |
 
-- Hover is a colour or background shift, never a transform.
-- Touch press: a `--hover-bg` wash, and buttons may give slightly to `scale(0.97)` under the finger. This is the only scale effect, and only on press.
-- Accordion chevrons rotate 180°.
-- List rows may settle in (fade plus 8px rise) the first time they appear, never again on scrolling back.
-- **Never animate on page load, on scroll, or for decoration.** Use no bounce or spring overshoot. Ledger's toast and its 0.4–0.5s colour fades change to the values above.
-- `prefers-reduced-motion: reduce` sets every duration to 0 except opacity fades, which drop to 100ms.
+### 11.2 Rules
+
+- **Press**: controls squish to `--press-scale` and morph their corners (§6.4) on `spatial-fast`, then spring back. Whole-card targets use `.dd-pressable` (0.98).
+- **Hover** (fine pointers only): colour shifts, plus `.dd-lift` on cards (3px up and a hair of tilt). Icons in buttons nudge; the FAB's plus turns.
+- **Arrive**: lists settle in one after another the first time they appear (`.dd-stagger`, 35ms apart, capped at twelve), never again when scrolling back or returning from the back stack.
+- **Leave**: 160ms fade, ease-in. Exits never bounce.
+- **Never loop for decoration** except the slow empty-state drift and the loading indicator. Never animate on scroll. Never make anyone wait for an animation to finish before they can act.
+- `prefers-reduced-motion: reduce` sets every spatial spring to 0ms, effects to 100ms, removes every press scale, flourish, loop and celebration, and leaves only short opacity fades.
+
+### 11.3 Delight and easter eggs
+
+The package ships the toolkit; each app decides what to hide.
+
+| Tool | What it does |
+|---|---|
+| `celebrate({ origin, glyphs, colours, shapes })` | Confetti in Expressive shapes and token colours, optionally mixed with the app's own glyphs (fleurons, letters, numerals; never emoji). Bursts from an element or the upper centre |
+| `play(node, 'wiggle')` | One-shot flourishes: `pop`, `wiggle`, `jelly`, `tada`, `spin-once`, `flip`, `heartbeat` |
+| `konami(fn)` | The Konami code on a keyboard, or up up down down left right left right and two taps on a touch screen |
+| `use:secretTaps={{ count, onunlock }}` | Several quick taps on an element (usually the page title or the app's name in About) |
+| `use:longPress={{ ms, onunlock }}` | Holding something down |
+| `use:countUp={{ value }}` | A number that counts up on the slow spring |
+| `createEggs(app, ids)` | Remembers which eggs this person has found, on this device, for "Easter egg found: 2 of 4." |
+
+**Celebrate real accomplishments**, once each: finishing a book, a perfect score, the last step of a recipe, a trip saved, a first anything. Not routine saves, and never errors or deletions.
+
+**Easter eggs** in every app:
+
+- The **Konami code** does something themed to the app.
+- **Tapping the page title seven times** does something else.
+- At least one **contextual** egg tied to the app's subject (a search word, a special value, a date).
+- The first time each is found, a celebration toast says so with the count: "Easter egg found: 1 of 3." After that it just plays.
+- The About section lists how many have been found ("Easter eggs: 2 of 3 found"), never which.
+
+**Rules for eggs**: an egg never changes, hides or deletes data, never blocks the screen for more than its animation, never fires during a step flow, and always has a text equivalent for screen readers (its toast). Under reduced motion the toast still appears and the animation doesn't.
 
 ---
 
 ## 12. Voice and copy
 
 - **Restrained and precise.** No exclamation marks, no "Let's get started!", no marketing voice, no emoji in UI text.
+- **Wry, not loud, when celebrating.** Celebration and easter-egg toasts may have a wink ("Every city deserves one perfect day.", "Yes, chef."), still in sentence case, still without exclamation marks or emoji. One sentence.
 - **Ask plainly.** Step headings are questions ("When do you fly?"). Buttons are verbs ("Save city", "Delete trip").
 - **Short, dignified labels.** "The Ledger", "Up next", "Past trips", "Your data".
 - **Explain next to the control.** A hint under the field, not a tooltip and not a paragraph at the top of the screen.
@@ -684,7 +762,9 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Every control is keyboard-operable. Switches use `role="switch"` and `aria-checked`. Tabs use `role="tablist"` and `aria-selected`. Expanding rows use `aria-expanded`.
 - Focus-visible uses a 2px `--focus-ring` outline offset 2px. Never use `outline: none` on its own.
 - `color-scheme` is set per theme so native scrollbars and form controls match.
-- First load honours `prefers-color-scheme`. Animations honour `prefers-reduced-motion`.
+- First load honours `prefers-color-scheme`. Animations honour `prefers-reduced-motion`: springs settle at once, flourishes and confetti don't play, loaders hold still (§11.2).
+- A celebration or easter egg is never the only signal: its toast says it in words.
+- Shape morphs change corners, never the size of a 44px target.
 - Colour never carries meaning alone. Score tiers also show the tier name, and status chips also show the word.
 - Respect the OS text size. Layouts must hold at 200% text without horizontal scrolling.
 
@@ -696,7 +776,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 2. Add the glow layer and the gradient body.
 3. Use serif for display, system sans for body and system mono for data.
 4. Put an all-caps tracked mono label above every field and section.
-5. Use a 2px radius everywhere. No pills.
+5. Use the corner scale (§6.4): pill buttons, `--corner-lg` panels, `--corner-xl` modals and sheets. Let shapes morph on press and selection.
 6. Use translucent panels for content zones and rows inside them for long lists.
 7. Keep accents sparse: italic words, numbers, icon tints, the one active control.
 8. Allow one primary action per screen.
@@ -707,7 +787,8 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 13. Use the undo toast instead of confirming, unless the action is truly irreversible.
 14. Back closes the topmost overlay first.
 15. Write copy like an editor, not a marketer.
-16. Resist the urge to animate.
+16. Move on springs (§11.1), stagger lists in once, and respect reduced motion.
+18. Hide at least three easter eggs and celebrate real accomplishments (§11.3).
 17. Hand off to a sibling app with its `<app>://` link from `links.ts`, and let links only prefill (§14.1).
 
 ---
@@ -743,6 +824,15 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Mise joins the suite, with `mise://open` and `mise://import` (§14.1).
 - The step type size for cooking mode (§5.2), the switch row from Rosetta and Colophon (§8.18), and the timer chip (§8.19), each with its class in `components.css`. `Switch` is a shared component.
 
+**Added in 2.0.0 (Expressive)**
+
+- Material 3 Expressive comes to the suite. The corner scale (`--corner-*`) replaces 2px corners everywhere, with shape morphing on press and selection (§6.4). `--radius` is now 12px.
+- Springs (`--spring-*`), generated from damping and stiffness, replace fixed curves for everything that moves (§11.1). `dusk-dawn kotlin` writes them for Compose too.
+- The emphasized type weight and display style (§5.1, §5.2).
+- New shared components: `LoadingIndicator` (§8.20) and `WavyProgress` (§8.21). The connected segmented control, pill switch and theme toggle, celebration toast, and the drifting empty-state icon.
+- Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
+- Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
+
 **Decided**
 
 - Fraunces is bundled as the display serif in every app (§5.1).
@@ -762,11 +852,12 @@ Everything in this document that can be code lives in one package, **`dusk-dawn`
 
 | Path | What it is |
 |---|---|
-| `tokens.json` | Every colour, size, duration and font (§3, §5.1, §6, §11), and the contrast pairs (§15) |
+| `tokens.json` | Every colour, size, shape, weight, spring, duration and font (§3, §5.1, §6, §11), and the contrast pairs (§15) |
 | `css/tokens.css` | The theme file generated from `tokens.json`, with the Fraunces `@font-face` rules |
-| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, segmented control, tab rail, modal, sheet, toast, notice, empty states, switch row, timer chip, step type |
+| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, segmented control, tab rail, modal, sheet, toast, notice, empty states, switch row, timer chip, step type, loading indicator, wavy progress, delight utilities and the Expressive motion |
 | `fonts/` | Fraunces, normal and italic, with its licence (§5.1) |
-| `Switch`, `TabRail`, `ThemeToggle`, `Toast` | The Svelte components every app shares (§8.18, §8.5, §8.9, §8.12) |
+| `LoadingIndicator`, `Switch`, `TabRail`, `ThemeToggle`, `Toast`, `WavyProgress` | The Svelte components every app shares (§8.20, §8.18, §8.5, §8.9, §8.12, §8.21) |
+| `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, `shapeClipPath`, `spring` | The Expressive helpers (§6.4, §11), from `dusk-dawn` in components or `dusk-dawn/expressive` in plain modules |
 | `dusk-dawn` command | `check` (contrast), `colours` (no literal colours in an app), `css` and `kotlin` (theme files for other targets) |
 | `style.md` | This document |
 
@@ -774,7 +865,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 ### 18.2 Adopting it in a new app
 
-1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v1.1.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
+1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.0.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
 2. Import the two stylesheets first, before any of the app's own CSS:
 
    ```css
@@ -786,7 +877,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 3. Use the shared components from the package rather than writing new ones:
 
    ```ts
-   import { Switch, TabRail, ThemeToggle, Toast } from 'dusk-dawn';
+   import { LoadingIndicator, Switch, TabRail, ThemeToggle, Toast, WavyProgress, celebrate, konami } from 'dusk-dawn';
    ```
 
 4. Add both checks to the app's scripts, and make CI run them:
@@ -804,7 +895,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 1. Make the change in the `dusk-dawn` repository: `tokens.json`, `css/components.css`, a shared component, or this file.
 2. Run `npm run build` to regenerate `css/tokens.css`, then `npm run check`. The package's CI fails if the contrast check fails, if `css/tokens.css` is stale, or if a component fails its type check.
-3. Merge, bump the version in `package.json`, and tag the release (`v1.1.0`). A new token or component is a minor version. A renamed or removed token or class is a major version.
+3. Merge, bump the version in `package.json`, and tag the release (`v2.0.0`). A new token or component is a minor version. A renamed or removed token or class is a major version.
 4. In each app, move the dependency to the new tag, run its checks, and open a pull request. Apps can move one at a time.
 
 An app never edits the package's files in `node_modules`, and never overrides a shared class with a different look. If an app needs something the package doesn't have, add it to the package so the next app gets it too.
