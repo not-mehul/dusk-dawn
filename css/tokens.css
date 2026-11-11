@@ -1,4 +1,4 @@
-/* Generated from tokens.json by dusk-dawn 2.0.0. Do not edit. */
+/* Generated from tokens.json by dusk-dawn 2.1.0. Do not edit. */
 
 @font-face {
   font-family: "Fraunces";
@@ -101,7 +101,7 @@
   --hover-bg: rgba(41,37,36,0.4);
   --disabled-bg: rgba(41,37,36,0.6);
   --sheet-bg: #0f0d0b;
-  --modal-bg: rgba(20,17,14,0.96);
+  --modal-bg: #14110e;
   --modal-backdrop: rgba(12,10,8,0.82);
   --focus-ring: #d4a574;
   --error-bg: rgba(69,10,10,0.2);
@@ -167,7 +167,7 @@
   --hover-bg: rgba(205,191,166,0.3);
   --disabled-bg: rgba(220,210,192,0.6);
   --sheet-bg: #efe6d8;
-  --modal-bg: rgba(252,248,240,0.98);
+  --modal-bg: #fcf8f0;
   --modal-backdrop: rgba(60,52,40,0.45);
   --focus-ring: #815c2d;
   --error-bg: rgba(192,57,43,0.12);

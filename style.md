@@ -160,7 +160,7 @@ Translucent layers that lift content off the background. These are the "reading 
 | `--hover-bg` | `rgba(41,37,36,0.4)` | `rgba(205,191,166,0.3)` | Generic hover and press wash |
 | `--disabled-bg` | `rgba(41,37,36,0.6)` | `rgba(220,210,192,0.6)` | Disabled control fill |
 | `--sheet-bg` | `#0f0d0b` | `#efe6d8` | Bottom sheets and full-screen flows (opaque) |
-| `--modal-bg` | `rgba(20,17,14,0.96)` | `rgba(252,248,240,0.98)` | Modal card, toast |
+| `--modal-bg` | `#14110e` | `#fcf8f0` | Modal card, toast. Opaque: nothing behind a modal shows through it |
 | `--modal-backdrop` | `rgba(12,10,8,0.82)` | `rgba(60,52,40,0.45)` | Dimming layer behind modals and sheets |
 
 In Dusk, inputs are darker than their panel. In Dawn, inputs are lighter than the cream panel. Both read as recessed, by going in opposite directions.
@@ -359,7 +359,7 @@ Shapes follow the **Material 3 Expressive corner scale**, as tokens:
 }
 ```
 
-Surface weights, lightest to densest: `--panel-bg-faint` (tracks, tiles) → `--panel-bg` (panels, cards) → `--input-bg` (recessed fields) → `--modal-bg` (modal, toast) → `--sheet-bg` (opaque).
+Surface weights, lightest to densest: `--panel-bg-faint` (tracks, tiles) → `--panel-bg` (panels, cards) → `--input-bg` (recessed fields) → `--modal-bg` (modal, toast; opaque) → `--sheet-bg` (opaque).
 
 `backdrop-filter` is optional. On Android it is skipped below WebView 76, and it is not worth a per-frame cost on long lists. The panel's translucency over the glows does the lifting either way. Never put `backdrop-filter` on list rows. Use it only on fixed chrome and panels.
 
@@ -426,6 +426,16 @@ Top-level and in-screen navigation. **One pattern in all three apps**, replacing
 - Horizontally scrollable when it overflows, with no visible scrollbar. Keep the active tab in view.
 - A count badge may follow a label.
 - Placed under the page header. **No bottom navigation bar.** These apps have three to five top-level sections and a FAB, and the tab rail keeps the editorial top-of-page structure.
+
+#### 8.5.1 Icon tabs (top-level sections on a phone)
+
+The tab rail with a Lucide icon over each word, for an app's **top-level sections** when they are three to five and must all stay in view. `IconTabs` in this package; Mise uses it.
+
+- The tabs **share the width evenly** (a grid of equal columns), so none is pushed off the edge, even with the phone's text size turned up. The word ellipsises before it ever scrolls.
+- Each tab is at least 56px tall: a 22px icon (1.5 stroke, §9) over the word in mono caps at 0.625rem, tracked 0.08em.
+- Inactive tabs are `--text-dim`; the active tab's word is `--text-heading` and its icon `--accent-amber`. The 3px rule sits **centred under the icon, at most 56px wide,** and springs between tabs as in the tab rail.
+- A count sits on the icon's top-right corner as a filled badge (`--accent-bright`, `--on-accent`), capped at 99+.
+- Still under the page header, never a bottom bar. In-screen navigation (filters, sub-views) keeps the word-only tab rail.
 
 ### 8.6 Inputs
 
@@ -833,6 +843,11 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
 
+**Added in 2.1.0**
+
+- `--modal-bg` is opaque in both themes (`#14110e`, `#fcf8f0`). At 96–98% the library showed through modals and toasts.
+- Icon tabs (§8.5.1): `IconTabs`, with `.icon-tabs`, for top-level sections that share the width evenly, from Mise.
+
 **Decided**
 
 - Fraunces is bundled as the display serif in every app (§5.1).
@@ -854,7 +869,7 @@ Everything in this document that can be code lives in one package, **`dusk-dawn`
 |---|---|
 | `tokens.json` | Every colour, size, shape, weight, spring, duration and font (§3, §5.1, §6, §11), and the contrast pairs (§15) |
 | `css/tokens.css` | The theme file generated from `tokens.json`, with the Fraunces `@font-face` rules |
-| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, segmented control, tab rail, modal, sheet, toast, notice, empty states, switch row, timer chip, step type, loading indicator, wavy progress, delight utilities and the Expressive motion |
+| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, segmented control, tab rail, icon tabs, modal, sheet, toast, notice, empty states, switch row, timer chip, step type, loading indicator, wavy progress, delight utilities and the Expressive motion |
 | `fonts/` | Fraunces, normal and italic, with its licence (§5.1) |
 | `LoadingIndicator`, `Switch`, `TabRail`, `ThemeToggle`, `Toast`, `WavyProgress` | The Svelte components every app shares (§8.20, §8.18, §8.5, §8.9, §8.12, §8.21) |
 | `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, `shapeClipPath`, `spring` | The Expressive helpers (§6.4, §11), from `dusk-dawn` in components or `dusk-dawn/expressive` in plain modules |
@@ -865,7 +880,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 ### 18.2 Adopting it in a new app
 
-1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.0.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
+1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.1.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
 2. Import the two stylesheets first, before any of the app's own CSS:
 
    ```css
