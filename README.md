@@ -43,8 +43,8 @@ import { worldPlaces } from 'dusk-dawn/places/vite';
 plugins: [worldPlaces({ fileName: 'catalog/places.txt', kinds: ['city', 'district'] })];
 
 // in the app, the first time a place is needed
-import { parsePlaces } from 'dusk-dawn/places';
-const world = parsePlaces(await (await fetch('catalog/places.txt')).text());
+import { parsePlacesInSlices } from 'dusk-dawn/places';
+const world = await parsePlacesInSlices(await (await fetch('catalog/places.txt')).text());
 world.named('Bombay')[0]; // Mumbai, 19.073, 72.883, Asia/Kolkata
 world.search('sao pa');   // São Paulo first
 ```

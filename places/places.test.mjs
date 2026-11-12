@@ -1,7 +1,7 @@
 // node --test places/places.test.mjs   (part of `npm run check`)
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { filterPlaces, foldPlaceName, parsePlaces } from './index.js';
+import { filterPlaces, foldPlaceName, parsePlaces, parsePlacesInSlices } from './index.js';
 import { readWorldPlaces } from './vite.js';
 
 const world = parsePlaces(readWorldPlaces());
@@ -78,4 +78,11 @@ test('a filtered file keeps only those kinds, and its links still point right', 
   assert.equal(bloomsbury.city, 'London');
   assert.equal(cities.named('Eiffel Tower').length, 0);
   assert.throws(() => parsePlaces(readWorldPlaces(), { kinds: ['castle'] }));
+});
+
+test('parsing in slices gives the same gazetteer', async () => {
+  const sliced = await parsePlacesInSlices(readWorldPlaces());
+  assert.equal(sliced.size, world.size);
+  assert.deepEqual(sliced.named('Kyoto')[0], world.named('Kyoto')[0]);
+  assert.deepEqual(sliced.search('lond'), world.search('lond'));
 });

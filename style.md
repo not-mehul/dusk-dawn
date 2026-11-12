@@ -918,7 +918,7 @@ Each place carries its country, its region, its IANA time zone, the city a landm
    plugins: [worldPlaces({ fileName: 'catalog/places.txt', kinds: ['city', 'district'] })]
    ```
 
-2. Fetch it the first time it is needed, never at start, and parse it once with `parsePlaces(text)`. Parsing takes about a third of a second on a laptop and the result is held in columns, not objects.
+2. Fetch it once, off the critical path, and parse it with `parsePlacesInSlices(text)`, which works a few milliseconds at a time and hands the main thread back in between, so a phone never stutters while it loads. The result is held in columns, not a third of a million objects. (`parsePlaces(text)` does the same in one go, for tests and build scripts.)
 3. Look places up with `named` (exact, for text the person typed without picking a suggestion) and `search` (prefix, for suggestions). Both put the place most people mean first: a town before a region or landmark of its size, a place's own name before a name it is also known by.
 4. When nothing matches, keep the text and leave the place without a pin. An honest blank beats a confident pin in the wrong country.
 5. Credit GeoNames where the app lists its sources: "Places: GeoNames (geonames.org), CC BY 4.0".

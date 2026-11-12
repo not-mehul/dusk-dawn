@@ -51,15 +51,24 @@ const KIND_NAMES = Object.values(KINDS);
  * PETERSBURG" fold alike. Letters of every script survive.
  */
 export function foldPlaceName(value) {
-  let folded = String(value)
-    .normalize('NFD')
-    .replace(/\p{M}+/gu, '')
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, ' ')
-    .trim();
-  if (folded.startsWith('the ')) folded = folded.slice(4);
-  return folded.replace(/^st /, 'saint ').replace(/^ste /, 'sainte ').replace(/^mt /, 'mount ');
+  const text = String(value);
+  // Most names are plain ASCII, which needs no Unicode work: a phone folds a
+  // third of a million of them on the first lookup.
+  let folded = ASCII.test(text)
+    ? text.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+    : text
+        .normalize('NFD')
+        .replace(/\p{M}+/gu, '')
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}]+/gu, ' ')
+        .trim();
+  if (folded.charCodeAt(0) === 116 && folded.startsWith('the ')) folded = folded.slice(4);
+  const c = folded.charCodeAt(0);
+  if (c === 115) return folded.replace(/^st /, 'saint ').replace(/^ste /, 'sainte ');
+  if (c === 109) return folded.replace(/^mt /, 'mount ');
+  return folded;
 }
+const ASCII = /^[\x00-\x7f]*$/;
 
 /** Splits the file into its header, its tables and its rows. */
 function sections(text) {
@@ -114,7 +123,12 @@ export function filterPlaces(text, { kinds } = {}) {
  * plain Place made on demand.
  */
 export class Gazetteer {
-  constructor(text, { kinds } = {}) {
+  constructor(text, options = {}) {
+    drain(this._build(text, options));
+  }
+
+  /** Parses the file, pausing every SLICE rows when driven by parsePlacesInSlices. */
+  *_build(text, { kinds } = {}) {
     const keep = kindFilter(kinds);
     const s = sections(text);
     this.attribution = s.attribution;
@@ -127,6 +141,7 @@ export class Gazetteer {
     this._countryIndex = new Map(this.countries.map((c, i) => [c.code, i]));
     this._zones = zones;
     this._regions = ['', ...s.regions];
+    yield;
 
     const n = s.rows.length;
     const names = [];
@@ -141,11 +156,13 @@ export class Gazetteer {
     const near = new Int32Array(n);
     const moved = new Int32Array(n).fill(-1);
     let count = 0;
-    s.rows.forEach((row, i) => {
-      if (row === '') return;
+    for (let i = 0; i < n; i++) {
+      if (i % SLICE === SLICE - 1) yield;
+      const row = s.rows[i];
+      if (row === '') continue;
       const f = row.split('|');
       const letter = f[7] ?? '';
-      if (keep && !keep.has(letter)) return;
+      if (keep && !keep.has(letter)) continue;
       moved[i] = count;
       names.push(f[0]);
       others.push(f[9] ?? '');
@@ -158,8 +175,9 @@ export class Gazetteer {
       kind[count] = LETTERS.indexOf(letter);
       near[count] = f[8] ? Number(f[8]) : -1;
       count++;
-    });
+    }
     for (let i = 0; i < count; i++) near[i] = near[i] < 0 ? -1 : moved[near[i]];
+    yield;
 
     this.size = count;
     this._names = names;
@@ -182,6 +200,36 @@ export class Gazetteer {
     for (let b = 0, at = 0; b < 512; b++) [buckets[b], at] = [at, at + buckets[b]];
     this._order = new Int32Array(count);
     for (let i = 0; i < count; i++) this._order[buckets[511 - score[i]]++] = i;
+  }
+
+  /**
+   * Folds every name for lookups: the folded names in best-first order, and
+   * folded name → places for own and other names. The slow part of the first
+   * lookup, so parsePlacesInSlices does it ahead of time.
+   */
+  *_buildIndex() {
+    const keys = new Array(this.size);
+    const byName = new Map();
+    const byOther = new Map();
+    const add = (map, key, i) => {
+      const list = map.get(key);
+      if (list) list.push(i);
+      else map.set(key, [i]);
+    };
+    for (let at = 0; at < this.size; at++) {
+      if (at % SLICE === SLICE - 1) yield;
+      const i = this._order[at];
+      keys[at] = foldPlaceName(this._names[i]);
+      add(byName, keys[at], i);
+      if (this._others[i]) for (const o of this._others[i].split(';')) add(byOther, foldPlaceName(o), i);
+    }
+    this._folded = keys;
+    this._byName = byName;
+    this._byOther = byOther;
+  }
+
+  _index() {
+    if (!this._byName) drain(this._buildIndex());
   }
 
   /** Place number i (0 ≤ i < size). */
@@ -211,31 +259,6 @@ export class Gazetteer {
     return i === undefined ? undefined : this.countries[i];
   }
 
-  /** Folded names in best-first order, built on first use. */
-  _keys() {
-    this._folded ??= Array.from(this._order, (i) => foldPlaceName(this._names[i]));
-    return this._folded;
-  }
-
-  /** Folded name → places, and folded other name → places, built on first use. */
-  _exact() {
-    if (!this._byName) {
-      const keys = this._keys();
-      this._byName = new Map();
-      this._byOther = new Map();
-      const add = (map, key, i) => {
-        const list = map.get(key);
-        if (list) list.push(i);
-        else map.set(key, [i]);
-      };
-      this._order.forEach((i, at) => {
-        add(this._byName, keys[at], i);
-        if (this._others[i]) for (const o of this._others[i].split(';')) add(this._byOther, foldPlaceName(o), i);
-      });
-    }
-    return this._byName;
-  }
-
   /**
    * Every place called exactly `name`, or also known by it ("Bombay"), best
    * first: a town before a region or landmark of the same size, a place's own
@@ -246,7 +269,8 @@ export class Gazetteer {
   named(name, { kinds } = {}) {
     const key = foldPlaceName(name);
     if (key === '') return [];
-    const own = new Set(this._exact().get(key) ?? []);
+    this._index();
+    const own = new Set(this._byName.get(key) ?? []);
     const ids = [...own, ...(this._byOther.get(key) ?? []).filter((i) => !own.has(i))];
     const score = (i) => this._score[i] + (own.has(i) ? OWN_NAME_BONUS : 0);
     // Stable, so equal scores keep best-first order.
@@ -265,7 +289,8 @@ export class Gazetteer {
     if (q.length < 2) return [];
     const keep = kindFilter(kinds);
     const ok = (i) => !keep || keep.has(LETTERS[this._kind[i]]);
-    const keys = this._keys();
+    this._index();
+    const keys = this._folded;
     const starts = [];
     const words = [];
     const inner = ` ${q}`;
@@ -278,7 +303,6 @@ export class Gazetteer {
     }
     let found = [...starts, ...words];
     if (found.length < limit) {
-      this._exact();
       const others = [];
       for (const [key, list] of this._byOther) {
         if (key.startsWith(q)) for (const i of list) if (ok(i) && !found.includes(i)) others.push(i);
@@ -301,7 +325,33 @@ export class Gazetteer {
   }
 }
 
-/** Parses the gazetteer's text. `kinds` keeps only those kinds of place. */
+/** Rows handled between pauses: a few milliseconds' work on a phone. */
+const SLICE = 8192;
+
+function drain(steps) {
+  while (!steps.next().done);
+}
+
+async function inSlices(steps) {
+  while (!steps.next().done) await new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+/**
+ * Parses the gazetteer's text in one go. `kinds` keeps only those kinds of
+ * place. The first lookup then folds every name, which takes a moment.
+ */
 export function parsePlaces(text, options) {
   return new Gazetteer(text, options);
+}
+
+/**
+ * Parses the text and prepares every lookup a slice at a time, handing the
+ * main thread back between slices, so a phone keeps scrolling while it works.
+ * What an app should use at start.
+ */
+export async function parsePlacesInSlices(text, options) {
+  const world = Object.create(Gazetteer.prototype);
+  await inSlices(world._build(text, options));
+  await inSlices(world._buildIndex());
+  return world;
 }

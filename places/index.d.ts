@@ -65,3 +65,4 @@ export class Gazetteer {
 }
 
 export function parsePlaces(text: string, options?: PlaceOptions): Gazetteer;
+export function parsePlacesInSlices(text: string, options?: PlaceOptions): Promise<Gazetteer>;
