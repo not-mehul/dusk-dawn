@@ -1,7 +1,7 @@
 {
   "name": "dusk-dawn",
-  "version": "2.0.0",
-  "description": "Editorial Dusk & Dawn: the shared design package for Waymark, BookShelf, Ledger, Colophon, Rosetta and Mise. Tokens, Fraunces, shared components and the colour checks.",
+  "version": "2.1.0",
+  "description": "Editorial Dusk & Dawn: the shared design package for Waymark, BookShelf, Ledger, Colophon, Rosetta and Mise. Tokens, Fraunces, shared components, the colour checks and the world places gazetteer.",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -19,6 +19,12 @@
     "css",
     "fonts",
     "svelte",
+    "places/index.js",
+    "places/index.d.ts",
+    "places/vite.js",
+    "places/vite.d.ts",
+    "places/world.txt",
+    "places/LICENSE.md",
     "tokens.json",
     "style.md"
   ],
@@ -36,6 +42,15 @@
     "./components.css": "./css/components.css",
     "./tokens.json": "./tokens.json",
     "./fonts/*": "./fonts/*",
+    "./places": {
+      "types": "./places/index.d.ts",
+      "default": "./places/index.js"
+    },
+    "./places/vite": {
+      "types": "./places/vite.d.ts",
+      "default": "./places/vite.js"
+    },
+    "./places/world.txt": "./places/world.txt",
     "./package.json": "./package.json"
   },
   "sideEffects": [
@@ -45,12 +60,14 @@
   "types": "./svelte/index.d.ts",
   "scripts": {
     "build": "node bin/dusk-dawn.mjs build",
-    "check": "node bin/dusk-dawn.mjs verify && node bin/dusk-dawn.mjs colours css svelte && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings"
+    "check": "node bin/dusk-dawn.mjs verify && node --test places/places.test.mjs && node bin/dusk-dawn.mjs colours css svelte && svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
+    "places": "node --max-old-space-size=6144 scripts/build-places.mjs"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"
   },
   "devDependencies": {
+    "fflate": "^0.8.3",
     "svelte": "^5.57.3",
     "svelte-check": "^4.7.7",
     "typescript": "~6.0.3"
