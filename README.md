@@ -1,6 +1,6 @@
 <h1 align="center">dusk-dawn</h1>
 
-<p align="center"><em>Editorial Dusk &amp; Dawn, the design system behind six apps.</em></p>
+<p align="center"><em>Editorial Dusk &amp; Dawn, the design system behind seven apps.</em></p>
 
 <p align="center">
   Svelte 5 package&nbsp;·&nbsp;<a href="https://github.com/not-mehul/dusk-dawn/releases/latest">Latest release</a>&nbsp;·&nbsp;MIT&nbsp;·&nbsp;Created by <strong>Mehul Sen</strong>
@@ -8,7 +8,7 @@
 
 ---
 
-**Editorial Dusk & Dawn**, Material 3 Expressive edition: the design system shared by Waymark, BookShelf, Ledger, Colophon, Rosetta and Mise, as one package. The full spec is [`style.md`](style.md); §18 covers this package.
+**Editorial Dusk & Dawn**, Material 3 Expressive edition: the design system shared by Waymark, BookShelf, Ledger, Colophon, Rosetta, Mise and Nookling, as one package. The full spec is [`style.md`](style.md); §18 covers this package.
 
 ## What's in it
 
@@ -16,6 +16,7 @@
 - `css/tokens.css`: the theme file generated from `tokens.json`, with the Fraunces `@font-face` rules.
 - `css/components.css`: the shared component styles.
 - `fonts/`: Fraunces, normal and italic (SIL Open Font License).
+- The need meter (`.need-meter`), and the pet tokens and living-subject rule for Nookling (style.md §3.7, §8.22, §11.2).
 - Svelte 5 components: `IconTabs`, `LoadingIndicator`, `Switch`, `TabRail`, `ThemeToggle`, `Toast` and `WavyProgress`.
 - Expressive helpers (style.md §11.3): `celebrate` (confetti in token colours), `play` (one-shot flourishes), `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs` (easter-egg tracking), `shapeClipPath` and `spring`. All of them respect reduced motion.
 - `dusk-dawn/places`: the world gazetteer for apps with a map (style.md §18.4). About 320,000 places from GeoNames (CC BY 4.0): every town of 1,000 people or more, every region, and landmarks, islands, mountains, lakes, parks and stations with an English Wikipedia article, each with its time zone and English, old and local names. `dusk-dawn/places/vite` ships the file with an app.
@@ -24,7 +25,7 @@
 ## Using it in an app
 
 ```sh
-npm install --save-dev github:not-mehul/dusk-dawn#v2.1.0
+npm install --save-dev github:not-mehul/dusk-dawn#v2.2.0
 ```
 
 ```css
@@ -66,7 +67,7 @@ npm run build   # regenerates css/tokens.css
 npm run check   # contrast, generated CSS up to date, no literal colours, svelte-check
 ```
 
-Then bump `version`, tag the release (`v2.1.0`), and move each app to the new tag in its own pull request. A new token or component is a minor version; a renamed or removed one is a major version.
+Then bump `version`, tag the release (`v2.2.0`), and move each app to the new tag in its own pull request. A new token or component is a minor version; a renamed or removed one is a major version.
 
 To refresh the places, run `npm run places` (it downloads about 650 MB from GeoNames into `.geonames/`, or reads `GEONAMES_DIR`) and commit `places/world.txt`.
 
@@ -84,6 +85,7 @@ Every app below installs this package at a tag and takes its tokens, fonts, comp
 | [Colophon](https://github.com/not-mehul/Colophon) | Inspect, fix and rebind EPUB editions |
 | [Rosetta](https://github.com/not-mehul/Rosetta) | A quiet library and reader for books, papers and notes |
 | [Mise](https://github.com/not-mehul/Mise) | Recipes from anywhere, cooked one step at a time |
+| [Nookling](https://github.com/not-mehul/Nookling) | A small round friend to feed, play with and put to bed |
 
 ## Credits
 
