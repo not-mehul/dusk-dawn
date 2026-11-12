@@ -849,6 +849,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Option chips are 44px tall, the touch-target minimum (§14). They were 36px.
 - Dusk map colours: land is lifted to `#332d28` off near-black water `#0e1316`, and the coast, grid and visited fill are retuned so countries read clearly. Before, land and water sat at about 1.2:1 and the teal water looked cold against the warm theme.
 - Icon tabs (§8.5.1): `IconTabs`, with `.icon-tabs`, for top-level sections that share the width evenly, from Mise.
+- World places (§18.4): `dusk-dawn/places` and `dusk-dawn/places/vite`, one GeoNames gazetteer of about 320,000 places that Waymark and Ledger pin on their maps instead of keeping their own city lists.
 
 **Decided**
 
@@ -875,6 +876,7 @@ Everything in this document that can be code lives in one package, **`dusk-dawn`
 | `fonts/` | Fraunces, normal and italic, with its licence (§5.1) |
 | `LoadingIndicator`, `Switch`, `TabRail`, `ThemeToggle`, `Toast`, `WavyProgress` | The Svelte components every app shares (§8.20, §8.18, §8.5, §8.9, §8.12, §8.21) |
 | `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, `shapeClipPath`, `spring` | The Expressive helpers (§6.4, §11), from `dusk-dawn` in components or `dusk-dawn/expressive` in plain modules |
+| `dusk-dawn/places`, `dusk-dawn/places/vite` | The world gazetteer every app with a map uses (§18.4): about 320,000 places from GeoNames, the parser and search, and the Vite plugin that ships the file |
 | `dusk-dawn` command | `check` (contrast), `colours` (no literal colours in an app), `css` and `kotlin` (theme files for other targets) |
 | `style.md` | This document |
 
@@ -916,3 +918,27 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 4. In each app, move the dependency to the new tag, run its checks, and open a pull request. Apps can move one at a time.
 
 An app never edits the package's files in `node_modules`, and never overrides a shared class with a different look. If an app needs something the package doesn't have, add it to the package so the next app gets it too.
+
+### 18.4 World places
+
+Any app that puts places on a map or a globe (Waymark, Ledger) reads them from one file, `dusk-dawn/places/world.txt`, rather than keeping its own list. It holds about 320,000 places from [GeoNames](https://www.geonames.org/) (CC BY 4.0), to about 110 m:
+
+- every town of 1,000 people or more, every capital and every seat of a first- or second-level division;
+- every state, province and region, and the neighbourhoods with an English Wikipedia article (Bloomsbury, Shibuya);
+- landmarks, islands, mountains, lakes and falls, parks and stations with an English Wikipedia article (the Eiffel Tower, Santorini, Mount Fuji).
+
+Each place carries its country, its region, its IANA time zone, the city a landmark or neighbourhood belongs to, and its English, old and local names, so "Bombay" finds Mumbai and "Toscana" finds Tuscany.
+
+1. Ship the file with the Vite plugin, keeping only the kinds the app needs. Ledger keeps towns (about 3.2 MB compressed in the app); Waymark keeps everything (about 4.5 MB).
+
+   ```ts
+   import { worldPlaces } from 'dusk-dawn/places/vite';
+   plugins: [worldPlaces({ fileName: 'catalog/places.txt', kinds: ['city', 'district'] })]
+   ```
+
+2. Fetch it once, off the critical path, and parse it with `parsePlacesInSlices(text)`, which works a few milliseconds at a time and hands the main thread back in between, so a phone never stutters while it loads. The result is held in columns, not a third of a million objects. (`parsePlaces(text)` does the same in one go, for tests and build scripts.)
+3. Look places up with `named` (exact, for text the person typed without picking a suggestion) and `search` (prefix, for suggestions). Both put the place most people mean first: a town before a region or landmark of its size, a place's own name before a name it is also known by.
+4. When nothing matches, keep the text and leave the place without a pin. An honest blank beats a confident pin in the wrong country.
+5. Credit GeoNames where the app lists its sources: "Places: GeoNames (geonames.org), CC BY 4.0".
+
+The file is rebuilt in the package with `npm run places` (it downloads about 650 MB from GeoNames once) and shipped in a minor version like any other change.
