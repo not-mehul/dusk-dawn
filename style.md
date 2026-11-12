@@ -1,6 +1,6 @@
 # Editorial Dusk & Dawn
 
-The shared design system for **Waymark**, **BookShelf**, **Ledger**, **Colophon**, **Rosetta** and **Mise**, and for any app that joins them. Every app gets it from one package, [`dusk-dawn`](https://github.com/not-mehul/dusk-dawn) (§18).
+The shared design system for **Waymark**, **BookShelf**, **Ledger**, **Colophon**, **Rosetta**, **Mise** and **Nookling**, and for any app that joins them. Every app gets it from one package, [`dusk-dawn`](https://github.com/not-mehul/dusk-dawn) (§18).
 
 One design language, two themes. **Dusk** is the dark theme: serif display type over a near-black surface with ambient amber and sage glows, like a late-night reading room. **Dawn** is the light theme: the same type and structure on warm paper cream, like a sunlit study rather than a sterile dashboard.
 
@@ -213,6 +213,20 @@ Graphics are the one place where colour carries meaning instead of emphasis, so 
 | `--map-grid` | `rgba(168,162,158,0.1)` | `rgba(120,105,80,0.25)` |
 | `--map-visited` | `rgba(212,165,116,0.45)` | `rgba(176,125,62,0.28)` |
 | `--map-route` | `#d4a574` | `#815c2d` |
+
+**Pet.** Nookling's creature is a character, not a chart, but it is still drawn only from tokens so it follows the theme. Its fur is a fill; what separates it from the room is `--pet-outline`, a light rim in Dusk and a dark ink line in Dawn, checked at 3:1 on every surface. The pupils are checked at 4.5:1 on the whites of the eyes, and the mouth at 3:1 on every fur colour.
+
+| Token | Dusk | Dawn | Use |
+|---|---|---|---|
+| `--pet-fur` | `#d9a271` | `#e2ad78` | Default fur (Lamplighter) |
+| `--pet-fur-shade` | `#b9834f` | `#c38a52` | Inner tufts, the shadow underneath |
+| `--pet-fur-sage` / `-cream` / `-rust` | `#a9bc8f` / `#eadfc8` / `#c9774a` | `#adbf90` / `#f2e6cc` / `#cf7a48` | The Gardener, Dreamer and Scamp forms |
+| `--pet-fur-unwell` | `#a89a87` | `#c4b49b` | Paler fur while unwell |
+| `--pet-outline` | `#f3d3a8` | `#5e3c1d` | The fluffy edge |
+| `--pet-eye`, `--pet-pupil` | `#fffaf0`, `#1b1410` | `#fffcf5`, `#1b1410` | Eyes |
+| `--pet-mouth`, `--pet-tongue`, `--pet-cheek` | `#4a2418`, `#e07a6a`, blush at 45% | `#4a2418`, `#d9675a`, blush at 35% | Mouth and cheeks |
+| `--pet-glow-rgb` | `252, 200, 120` | `224, 160, 70` | The mood glow around the fur |
+| `--pet-food-berry` / `-leaf` / `-crust` / `-honey` | | | Food drawings, in both themes |
 
 **Camera.** The barcode scanner's viewfinder is black in both themes, because the camera image needs it. `--scanner-bg: #000`, `--scanner-fg: #fff` and `--scanner-scrim: rgba(0,0,0,0.45)` are the only pure black and white in the system, and they are defined once and shared by both themes.
 
@@ -576,6 +590,10 @@ Material 3 Expressive's loading indicator (`LoadingIndicator`): one `--accent-am
 
 Material 3 Expressive's wavy progress bar (`WavyProgress`): a 4px rounded stroke in `--accent-amber` that ripples as a sine wave while the work goes on, over a flat `--chart-track` track with a small gap. With a `value` it fills to that fraction; without one it is indeterminate and the whole bar ripples. At 100% it flattens and turns `--accent-sage`. Use it for imports, backups, binding a book, scanning a folder: anything with a known amount of work. Under reduced motion the wave is flat.
 
+### 8.22 Need meter
+
+A level that rises and falls on its own, such as a Nookling's Fullness or Energy. A mono caps label on the left, the level as a word in serif italic on the right ("Full", "Peckish", "Hungry"), and an 8px `--chart-track` bar under them filled in `--accent-amber`. Below a quarter the fill turns `--scale-4` and adds `is-low`; below a tenth, `--scale-5` and `is-critical`. The word always says the state, so colour never carries it alone. Set `--value` (0 to 1) on `.need-meter`; the fill moves on the default spatial spring. Give the track `role="meter"` with `aria-valuenow` and `aria-valuetext` set to the word.
+
 ---
 
 ## 9. Icons
@@ -649,7 +667,8 @@ The older tokens stay for things that aren't springs:
 - **Hover** (fine pointers only): colour shifts, plus `.dd-lift` on cards (3px up and a hair of tilt). Icons in buttons nudge; the FAB's plus turns.
 - **Arrive**: lists settle in one after another the first time they appear (`.dd-stagger`, 35ms apart, capped at twelve), never again when scrolling back or returning from the back stack.
 - **Leave**: 160ms fade, ease-in. Exits never bounce.
-- **Never loop for decoration** except the slow empty-state drift and the loading indicator. Never animate on scroll. Never make anyone wait for an animation to finish before they can act.
+- **Never loop for decoration** except the slow empty-state drift and the loading indicator.
+- **A living subject may loop.** When the moving thing *is* the content, such as Nookling's pet, it may breathe, blink and sleep in a loop. Only the subject loops, never its surroundings; loops are low in amplitude (a few percent of scale) and ride the effects or calm springs; they pause when the page is hidden or the subject is off screen; and under reduced motion the subject holds still poses that cross-fade, with every reaction also said in words. Never animate on scroll. Never make anyone wait for an animation to finish before they can act.
 - `prefers-reduced-motion: reduce` sets every spatial spring to 0ms, effects to 100ms, removes every press scale, flourish, loop and celebration, and leaves only short opacity fades.
 
 ### 11.3 Delight and easter eggs
@@ -728,7 +747,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 
 **Shape.** `<app>://<action>?<param>=<value>&…&source=<sender>`.
 
-- The scheme is the app's name in lower case: `waymark`, `bookshelf`, `ledger`, `colophon`, `rosetta`, `mise`. A new app takes its own name and joins `APPS` in `links.ts`.
+- The scheme is the app's name in lower case: `waymark`, `bookshelf`, `ledger`, `colophon`, `rosetta`, `mise`, `nookling`. A new app takes its own name and joins `APPS` in `links.ts`.
 - The action is a lower-case verb in the host position. Parameters are URL-encoded. Dates are `YYYY-MM-DD`, fractions are `0`–`1`, countries are ISO 3166-1 alpha-2 codes.
 - Every link carries `source=<sending app>`.
 - Actions and parameters are only ever added, never renamed or repurposed, because an older copy of a sibling may still send the old link.
@@ -745,6 +764,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 | `colophon://open` | Opens Colophon. EPUBs reach it as files ("Open with" or the share sheet), never in a link |
 | `mise://open?id=` | Opens that recipe, if it is on the phone |
 | `mise://import?url=` | Reads the recipe at that page and opens the review screen; nothing is saved until the person presses *Save recipe* |
+| `nookling://open` | Opens Nookling at the pet. Treat and story hand-offs are planned, and will only ever offer, never give |
 
 **Receiving.**
 
@@ -825,6 +845,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 
 - A three-state theme mode (System, Dusk, Dawn), from Waymark.
 - Data colours: the quality scale (Ledger tiers), chart series, map tokens (Waymark and Ledger) and the camera exemption (BookShelf).
+- 2.2.0: the pet tokens (§3.7), the need meter (§8.22) and the living-subject rule (§11.2), for Nookling.
 - `--sheet-bg`, `--success-bg`, a spacing scale and motion tokens.
 - Components: tab rail, choice cards, pickers, step flow, screen header, sheet, toast and undo, notice banner, two kinds of empty state, figures, share cards and settings structure.
 - Mobile platform rules (§14) and the contrast check in the build (§15).
@@ -884,7 +905,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 ### 18.2 Adopting it in a new app
 
-1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.1.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
+1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.2.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
 2. Import the two stylesheets first, before any of the app's own CSS:
 
    ```css

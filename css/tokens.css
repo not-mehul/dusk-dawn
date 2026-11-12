@@ -1,4 +1,4 @@
-/* Generated from tokens.json by dusk-dawn 2.1.0. Do not edit. */
+/* Generated from tokens.json by dusk-dawn 2.2.0. Do not edit. */
 
 @font-face {
   font-family: "Fraunces";
@@ -127,12 +127,29 @@
   --scanner-bg: #000000;
   --scanner-fg: #ffffff;
   --scanner-scrim: rgba(0,0,0,0.45);
+  --pet-fur: #d9a271;
+  --pet-fur-shade: #b9834f;
+  --pet-fur-sage: #a9bc8f;
+  --pet-fur-cream: #eadfc8;
+  --pet-fur-rust: #c9774a;
+  --pet-fur-unwell: #a89a87;
+  --pet-outline: #f3d3a8;
+  --pet-eye: #fffaf0;
+  --pet-pupil: #1b1410;
+  --pet-mouth: #4a2418;
+  --pet-tongue: #e07a6a;
+  --pet-cheek: rgba(240,128,110,0.45);
+  --pet-food-berry: #d9566a;
+  --pet-food-leaf: #8fb17a;
+  --pet-food-crust: #c48a50;
+  --pet-food-honey: #f2c45a;
   --accent-amber-rgb: 212, 165, 116;
   --accent-bright-rgb: 252, 211, 77;
   --accent-sage-rgb: 159, 179, 160;
   --danger-rgb: 248, 113, 113;
   --cream-rgb: 245, 236, 217;
   --shadow-rgb: 0, 0, 0;
+  --pet-glow-rgb: 252, 200, 120;
   --shadow-strength: 1;
 }
 
@@ -193,11 +210,28 @@
   --scanner-bg: #000000;
   --scanner-fg: #ffffff;
   --scanner-scrim: rgba(0,0,0,0.45);
+  --pet-fur: #e2ad78;
+  --pet-fur-shade: #c38a52;
+  --pet-fur-sage: #adbf90;
+  --pet-fur-cream: #f2e6cc;
+  --pet-fur-rust: #cf7a48;
+  --pet-fur-unwell: #c4b49b;
+  --pet-outline: #5e3c1d;
+  --pet-eye: #fffcf5;
+  --pet-pupil: #1b1410;
+  --pet-mouth: #4a2418;
+  --pet-tongue: #d9675a;
+  --pet-cheek: rgba(214,96,80,0.35);
+  --pet-food-berry: #b8394d;
+  --pet-food-leaf: #5d8a4a;
+  --pet-food-crust: #9c6430;
+  --pet-food-honey: #d9a028;
   --accent-amber-rgb: 176, 125, 62;
   --accent-bright-rgb: 224, 169, 42;
   --accent-sage-rgb: 111, 135, 112;
   --danger-rgb: 192, 57, 43;
   --cream-rgb: 120, 95, 50;
   --shadow-rgb: 90, 72, 44;
+  --pet-glow-rgb: 224, 160, 70;
   --shadow-strength: 0.4;
 }
