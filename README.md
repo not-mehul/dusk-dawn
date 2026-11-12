@@ -1,4 +1,12 @@
-# dusk-dawn
+<h1 align="center">dusk-dawn</h1>
+
+<p align="center"><em>Editorial Dusk &amp; Dawn, the design system behind six apps.</em></p>
+
+<p align="center">
+  Svelte 5 package&nbsp;·&nbsp;<a href="https://github.com/not-mehul/dusk-dawn/releases/latest">Latest release</a>&nbsp;·&nbsp;MIT&nbsp;·&nbsp;Created by <strong>Mehul Sen</strong>
+</p>
+
+---
 
 **Editorial Dusk & Dawn**, Material 3 Expressive edition: the design system shared by Waymark, BookShelf, Ledger, Colophon, Rosetta and Mise, as one package. The full spec is [`style.md`](style.md); §18 covers this package.
 
@@ -63,3 +71,27 @@ Then bump `version`, tag the release (`v2.1.0`), and move each app to the new ta
 To refresh the places, run `npm run places` (it downloads about 650 MB from GeoNames into `.geonames/`, or reads `GEONAMES_DIR`) and commit `places/world.txt`.
 
 Never edit `css/tokens.css` by hand, and never patch the package inside an app.
+
+## The Dusk & Dawn apps
+
+Every app below installs this package at a tag and takes its tokens, fonts, components and checks from it. Design changes happen here, never inside an app.
+
+| App | What it is for |
+|---|---|
+| [Waymark](https://github.com/not-mehul/Waymark) | Your whole trip, offline: flights, stays, plans and costs on one timeline |
+| [BookShelf](https://github.com/not-mehul/BookShelf) | Books, films, shows and the lines worth keeping |
+| [Ledger](https://github.com/not-mehul/Ledger) | A record of cities, scored on what matters to you |
+| [Colophon](https://github.com/not-mehul/Colophon) | Inspect, fix and rebind EPUB editions |
+| [Rosetta](https://github.com/not-mehul/Rosetta) | A quiet library and reader for books, papers and notes |
+| [Mise](https://github.com/not-mehul/Mise) | Recipes from anywhere, cooked one step at a time |
+
+## Credits
+
+dusk-dawn and the apps built on it are designed and built by **Mehul Sen** ([@not-mehul](https://github.com/not-mehul)).
+
+- Fraunces: SIL Open Font License, shipped in [`fonts/`](fonts) with its licence.
+- Places: [GeoNames](https://www.geonames.org), CC BY 4.0 (see [`places/LICENSE.md`](places/LICENSE.md)).
+
+## Licence
+
+[MIT](LICENSE) © 2026 Mehul Sen. Fraunces and the GeoNames data keep their own terms, listed above.
