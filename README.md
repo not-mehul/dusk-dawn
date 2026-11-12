@@ -8,7 +8,7 @@
 - `css/tokens.css`: the theme file generated from `tokens.json`, with the Fraunces `@font-face` rules.
 - `css/components.css`: the shared component styles.
 - `fonts/`: Fraunces, normal and italic (SIL Open Font License).
-- Svelte 5 components: `LoadingIndicator`, `Switch`, `TabRail`, `ThemeToggle`, `Toast` and `WavyProgress`.
+- Svelte 5 components: `IconTabs`, `LoadingIndicator`, `Switch`, `TabRail`, `ThemeToggle`, `Toast` and `WavyProgress`.
 - Expressive helpers (style.md §11.3): `celebrate` (confetti in token colours), `play` (one-shot flourishes), `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs` (easter-egg tracking), `shapeClipPath` and `spring`. All of them respect reduced motion.
 - `dusk-dawn/places`: the world gazetteer for apps with a map (style.md §18.4). About 320,000 places from GeoNames (CC BY 4.0): every town of 1,000 people or more, every region, and landmarks, islands, mountains, lakes, parks and stations with an English Wikipedia article, each with its time zone and English, old and local names. `dusk-dawn/places/vite` ships the file with an app.
 - The `dusk-dawn` command: `check` (contrast in both themes), `colours` (no literal colours in an app's source), `css` and `kotlin` (theme files for other targets).

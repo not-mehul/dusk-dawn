@@ -448,8 +448,9 @@ button {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  min-height: 36px;
-  padding: 0 0.75rem;
+  /* A touch target (§14): 44px, never the 36px it used to be. */
+  min-height: 44px;
+  padding: 0 0.875rem;
   border: 1px solid var(--border-soft);
   border-radius: var(--corner-sm);
   background: var(--chip-bg);
@@ -620,6 +621,68 @@ button {
     transform var(--spring-spatial-fast-dur) var(--spring-spatial-fast),
     width var(--spring-spatial-default-dur) var(--spring-spatial-default),
     opacity var(--spring-effects-fast-dur) var(--spring-effects-fast);
+}
+
+/* ─── Icon tabs (§8.5.1) ─────────────────────────────────────── */
+
+.icon-tabs {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  border-bottom: 1px solid var(--border-soft);
+}
+.icon-tabs [role='tab'] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 0;
+  min-height: 56px;
+  padding: var(--space-2) var(--space-1) var(--space-3);
+  background: none;
+  border: 0;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color var(--dur-hover);
+}
+.icon-tabs [role='tab']:hover,
+.icon-tabs [role='tab'][aria-selected='true'] {
+  color: var(--text-heading);
+}
+.icon-tabs [role='tab']:focus-visible {
+  outline-offset: -2px;
+}
+.icon-tab-glyph {
+  position: relative;
+  display: inline-flex;
+  transition: color var(--dur-hover);
+}
+.icon-tabs [role='tab'][aria-selected='true'] .icon-tab-glyph {
+  color: var(--accent-amber);
+}
+.icon-tab-glyph > svg {
+  width: 22px;
+  height: 22px;
+}
+.icon-tab-glyph .badge {
+  position: absolute;
+  top: -6px;
+  left: calc(100% - 8px);
+  margin: 0;
+  background: var(--accent-bright);
+  color: var(--on-accent);
+}
+.icon-tab-word {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* ─── Inputs (§8.6) ──────────────────────────────────────────── */
