@@ -459,11 +459,27 @@ The tab rail with a Lucide icon over each word, for an app's **top-level section
 - Mono face for numbers, codes, times, ISBNs and flight numbers. Use `inputmode` to bring up the right keyboard.
 - Label above in the field label style. Help text below in the hint style, never a tooltip.
 - Error: border `--danger`, message below in `--danger` body small, `aria-describedby` to the message.
-- Never browser-default styling. `select` elements use a custom chevron.
+- Never browser-default styling, and never a control that opens the system's own picker. Choices use `Select` (§8.6.1), clock times use `TimeField`, checkboxes use `.check` and sliders use `.range`. A bare `<select>`, `<input type="time">` or `<input type="date">` opens Android's Material picker, which belongs to neither theme.
 
-**Pickers** (Waymark). Date, time, month and zone fields are tappable fields shaped exactly like a text input (same height, border and padding) that open a picker modal. Calendars and clocks share one six-wide grid. A picker never changes a value unless the reader presses Choose.
+**Pickers** (Waymark). Date, time, month and zone fields are tappable fields shaped exactly like a text input (same height, border and padding) that open a picker modal. Calendars and clocks share one six-wide grid. A picker never changes a value unless the reader presses Choose. The clock is shared as `TimeField` (a `"HH:MM"` value, times shown in the reader's locale, its words passed in for other languages).
 
-**Slider** (Ledger metric slider). Track `--chart-track` 4px, fill `--accent-amber`, round 16px thumb in `--accent-bright` with a 1px `--on-accent` ring. Live value in serif to the right.
+**Checkbox** (`.check` on `<input type="checkbox">`). A 20px box with a 1.5px `--text-dim` border on `--input-bg`, `--corner-xs`. Checked: `--accent-bright` fill with an `--on-accent` tick that springs in, and the corners round to `--corner-sm`. The row or label around it is the 44px target.
+
+**Slider** (Ledger metric slider; `.range` on `<input type="range">`). Track `--chart-track` 4px, fill `--accent-amber`, round thumb in `--accent-bright` with a 1px `--on-accent` ring (16px in Ledger, 20px in `.range`, which grows under the finger), inside a 44px target. Live value in serif to the right.
+
+#### 8.6.1 Select menu
+
+`Select` in this package replaces every `<select>`. The field is a `.select` (an input with a chevron); tapping it opens a menu of the options under it, or over it when there is more room above, so the system picker never appears.
+
+- The menu is an opaque `--modal-bg` card, 1px `--border`, `--corner-lg`, 8px inside, with a soft shadow and a faint amber glow. It is at least as wide as the field and at most the screen less 8px each side, and scrolls inside when long. It sits in the top layer, so a modal or sheet never clips it.
+- Options are at least 48px tall, body text in `--text-body`. The option under the finger or the keyboard gets `--hover-bg`. The chosen option is `rgba(amber, 0.14)` with `--text-heading` at the emphasized weight and an `--accent-amber` tick, and rounds to a pill (§6.4). Disabled options are `--text-faint`.
+- Groups (Ledger's ranking) get a heading in the section label style and a `--border-faint` rule between them.
+- Opening: the field's border turns `--accent-amber`, it rounds to `--corner-md`, and the chevron turns over on the fast spatial spring; the menu fades and settles from 96% on the default spatial spring. It leaves with the 160ms fade.
+- Keyboard and screen readers: the WAI-ARIA select-only combobox. Focus stays on the field (`role="combobox"`, `aria-expanded`, `aria-activedescendant`); arrows, Home, End, Page Up and Down move; typing jumps to a match; Enter, Space or Tab chooses; Escape closes without closing the modal underneath. The active option carries the focus ring while the keyboard drives.
+- A tap outside, Escape or Android back closes it unchanged. Apps call `dismissOverlay()` first in their back handler (§14).
+- At 200% text, options and the field wrap their words; the menu never scrolls sideways.
+
+Use it for five or more choices, or choices with long names. For two to four short ones, use the segmented control (§8.4).
 
 **Rating** (BookShelf). Half-star input, 26px Lucide stars, empty `--text-faint`, filled `--accent-bright`. Read-only ratings in lists use 14px stars in `--accent-amber`.
 
@@ -486,7 +502,7 @@ One line: back control, title and at most one action, on a shared baseline.
 
 ### 8.9 Theme toggle
 
-A pill track (`--input-bg`, 1px `--border`) holding a moon and a sun, with a round sliding `--accent-amber` knob. The icon under the knob is `--on-accent`, the other is `--text-faint`. The knob moves on the fast spatial spring and squashes slightly under the finger; the sun's rays turn 90° as Dawn arrives and the moon tips as Dusk does. `role="switch"`, operable by Space and Enter, with `aria-checked` showing Dawn. Geometry is derived from three numbers (track, knob and inset), so each icon sits exactly under the knob.
+A pill track (`--input-bg`, 1px `--border`) holding a moon and a sun, with a round sliding `--accent-bright` knob and a soft glow of the same colour. The icon under the knob is `--on-accent` (8:1 or better in both themes), the other is `--text-dim`. The knob moves on the fast spatial spring and squashes slightly under the finger; the sun's rays turn 90° as Dawn arrives and the moon tips as Dusk does. `role="switch"`, operable by Space and Enter, with `aria-checked` showing Dawn. Geometry is derived from three numbers (track, knob and inset), so each icon sits exactly under the knob.
 
 ### 8.10 Modal
 
@@ -731,7 +747,7 @@ Every app ships as a Capacitor app for Android, and iOS where it has one.
 
 - **Edge to edge.** `viewport-fit=cover`. Pad the page and fixed chrome with `env(safe-area-inset-*)`. The toast, FAB and sheets sit above the bottom inset.
 - **System bars follow the theme.** Status and navigation bar icons are light in Dusk and dark in Dawn. Bars are transparent over the gradient. Update them on every `themechange`.
-- **Back closes the topmost thing first**: picker, then modal, then sheet, then screen. It never exits the app from a secondary screen. Keep one overlay stack per app (Ledger's `ui.pushOverlay`). Support Android's predictive back where the WebView exposes it.
+- **Back closes the topmost thing first**: picker, then modal, then sheet, then screen. It never exits the app from a secondary screen. Keep one overlay stack per app (Ledger's `ui.pushOverlay`). The package's own overlays (the `Select` menu and the `TimeField` clock) keep theirs: call `if (dismissOverlay()) return;` first in the back handler. Support Android's predictive back where the WebView exposes it.
 - **Touch targets** are at least 44×44px, with 8px between adjacent targets.
 - **No hover-only affordances.** Anything revealed on hover must also be reachable by tap and keyboard.
 - **No tap highlight.** Use `-webkit-tap-highlight-color: transparent`. The press state is the `--hover-bg` wash.
@@ -864,6 +880,11 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
 
+**Added in 2.3.0**
+
+- No control opens Android's own picker any more (§8.6). `Select` (§8.6.1) replaces `<select>` with a themed menu, `TimeField` replaces `<input type="time">` with the Waymark clock, and `.check` and `.range` draw checkboxes and sliders in the palette. `dismissOverlay()` lets Android back close them (§14).
+- The theme toggle's knob is `--accent-bright` in both themes (§8.9). In Dawn it was `--accent-amber` (`#815c2d`), a dark brown under a near-black sun at 2.9:1; the icon on it is now 8.2:1. The idle icon moves from `--text-faint` to `--text-dim`.
+
 **Added in 2.1.0**
 
 - `--modal-bg` is opaque in both themes (`#14110e`, `#fcf8f0`). At 96–98% the library showed through modals and toasts.
@@ -893,9 +914,9 @@ Everything in this document that can be code lives in one package, **`dusk-dawn`
 |---|---|
 | `tokens.json` | Every colour, size, shape, weight, spring, duration and font (§3, §5.1, §6, §11), and the contrast pairs (§15) |
 | `css/tokens.css` | The theme file generated from `tokens.json`, with the Fraunces `@font-face` rules |
-| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, segmented control, tab rail, icon tabs, modal, sheet, toast, notice, empty states, switch row, timer chip, step type, loading indicator, wavy progress, delight utilities and the Expressive motion |
+| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, select menu, time picker, checkbox, slider, segmented control, tab rail, icon tabs, modal, sheet, toast, notice, empty states, switch row, timer chip, step type, loading indicator, wavy progress, delight utilities and the Expressive motion |
 | `fonts/` | Fraunces, normal and italic, with its licence (§5.1) |
-| `LoadingIndicator`, `Switch`, `TabRail`, `ThemeToggle`, `Toast`, `WavyProgress` | The Svelte components every app shares (§8.20, §8.18, §8.5, §8.9, §8.12, §8.21) |
+| `LoadingIndicator`, `Select`, `Switch`, `TabRail`, `ThemeToggle`, `TimeField`, `Toast`, `WavyProgress` | The Svelte components every app shares (§8.20, §8.6.1, §8.18, §8.5, §8.9, §8.6, §8.12, §8.21), and `dismissOverlay` for Android back (§14) |
 | `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, `shapeClipPath`, `spring` | The Expressive helpers (§6.4, §11), from `dusk-dawn` in components or `dusk-dawn/expressive` in plain modules |
 | `dusk-dawn/places`, `dusk-dawn/places/vite` | The world gazetteer every app with a map uses (§18.4): about 320,000 places from GeoNames, the parser and search, and the Vite plugin that ships the file |
 | `dusk-dawn` command | `check` (contrast), `colours` (no literal colours in an app), `css` and `kotlin` (theme files for other targets) |
@@ -905,7 +926,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 ### 18.2 Adopting it in a new app
 
-1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.2.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
+1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.3.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
 2. Import the two stylesheets first, before any of the app's own CSS:
 
    ```css
