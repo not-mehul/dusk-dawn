@@ -389,6 +389,7 @@
   <div
     id={optionId(i)}
     class="dd-option"
+    data-value={String(option.value)}
     role="option"
     tabindex="-1"
     aria-selected={i === selectedIndex}

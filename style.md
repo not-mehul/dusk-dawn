@@ -473,7 +473,7 @@ The tab rail with a Lucide icon over each word, for an app's **top-level section
 
 - The menu is an opaque `--modal-bg` card, 1px `--border`, `--corner-lg`, 8px inside, with a soft shadow and a faint amber glow. It is at least as wide as the field and at most the screen less 8px each side, and scrolls inside when long. It sits in the top layer, so a modal or sheet never clips it.
 - Options are at least 48px tall, body text in `--text-body`. The option under the finger or the keyboard gets `--hover-bg`. The chosen option is `rgba(amber, 0.14)` with `--text-heading` at the emphasized weight and an `--accent-amber` tick, and rounds to a pill (§6.4). Disabled options are `--text-faint`.
-- Groups (Ledger's ranking) get a heading in the section label style and a `--border-faint` rule between them.
+- Each option carries `data-value` with its value, for tests. Groups (Ledger's ranking) get a heading in the section label style and a `--border-faint` rule between them.
 - Opening: the field's border turns `--accent-amber`, it rounds to `--corner-md`, and the chevron turns over on the fast spatial spring; the menu fades and settles from 96% on the default spatial spring. It leaves with the 160ms fade.
 - Keyboard and screen readers: the WAI-ARIA select-only combobox. Focus stays on the field (`role="combobox"`, `aria-expanded`, `aria-activedescendant`); arrows, Home, End, Page Up and Down move; typing jumps to a match; Enter, Space or Tab chooses; Escape closes without closing the modal underneath. The active option carries the focus ring while the keyboard drives.
 - A tap outside, Escape or Android back closes it unchanged. Apps call `dismissOverlay()` first in their back handler (§14).
