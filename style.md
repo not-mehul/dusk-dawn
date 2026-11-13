@@ -880,6 +880,10 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
 
+**Fixed in 2.3.1**
+
+- A `Select` field is as wide as its longest option allows, like a native select, so it never jumps when the value changes. In a narrow grid column it could shrink until its value broke mid-word (Nookling's away days).
+
 **Added in 2.3.0**
 
 - No control opens Android's own picker any more (§8.6). `Select` (§8.6.1) replaces `<select>` with a themed menu, `TimeField` replaces `<input type="time">` with the Waymark clock, and `.check` and `.range` draw checkboxes and sliders in the palette. `dismissOverlay()` lets Android back close them (§14).
@@ -926,7 +930,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 ### 18.2 Adopting it in a new app
 
-1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.3.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
+1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.3.1`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
 2. Import the two stylesheets first, before any of the app's own CSS:
 
    ```css
