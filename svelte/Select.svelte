@@ -130,7 +130,10 @@
     menu.style.maxHeight = `${room}px`;
     const h = Math.min(natural, room);
     const w = menu.offsetWidth;
-    const left = Math.max(edge, Math.min(r.left, vw - w - edge));
+    // Line up with the field's left edge, or its right edge when the menu is
+    // wider than the room to the right of it.
+    let left = r.left;
+    if (left + w > vw - edge) left = Math.max(edge, Math.min(r.right, vw - edge) - w);
     menu.style.left = `${left}px`;
     menu.style.top = `${above ? r.top - gap - h : r.bottom + gap}px`;
   }
