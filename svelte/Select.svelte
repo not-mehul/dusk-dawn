@@ -365,7 +365,12 @@
   {onkeydown}
   {onkeyup}
 >
-  <span class="dd-select-value" class:is-placeholder={shown === undefined}>{shown ?? placeholder}</span>
+  <!-- Like a native select, the field is as wide as its longest option allows, so it never jumps. -->
+  <span class="dd-select-text">
+    <span class="dd-select-value" class:is-placeholder={shown === undefined}>{shown ?? placeholder}</span>
+    <!-- Drawn from an attribute, so the labels stay out of the field's text. -->
+    {#each options as option, i (i)}<span class="dd-select-sizer" data-label={option.label} aria-hidden="true"></span>{/each}
+  </span>
   <svg
     class="dd-select-chevron"
     viewBox="0 0 24 24"
@@ -384,6 +389,7 @@
   <div
     id={optionId(i)}
     class="dd-option"
+    data-value={String(option.value)}
     role="option"
     tabindex="-1"
     aria-selected={i === selectedIndex}

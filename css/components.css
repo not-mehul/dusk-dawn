@@ -810,10 +810,24 @@ button {
   color: var(--text-faint);
   cursor: default;
 }
-.dd-select-value {
+.dd-select-text {
   flex: 1;
+  display: grid;
   min-width: 0;
-  overflow-wrap: anywhere;
+}
+.dd-select-value,
+.dd-select-sizer {
+  grid-area: 1 / 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.dd-select-sizer {
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+.dd-select-sizer::before {
+  content: attr(data-label);
 }
 .dd-select-value.is-placeholder {
   font-family: var(--font-serif);
@@ -905,7 +919,7 @@ button {
 .dd-option-label {
   flex: 1;
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 .dd-option-check {
   flex: none;

@@ -26,7 +26,7 @@
 ## Using it in an app
 
 ```sh
-npm install --save-dev github:not-mehul/dusk-dawn#v2.3.0
+npm install --save-dev github:not-mehul/dusk-dawn#v2.3.1
 ```
 
 ```css
@@ -68,7 +68,7 @@ npm run build   # regenerates css/tokens.css
 npm run check   # contrast, generated CSS up to date, no literal colours, svelte-check
 ```
 
-Then bump `version`, tag the release (`v2.3.0`), and move each app to the new tag in its own pull request. A new token or component is a minor version; a renamed or removed one is a major version.
+Then bump `version`, tag the release (`v2.3.1`), and move each app to the new tag in its own pull request. A new token or component is a minor version; a renamed or removed one is a major version.
 
 To refresh the places, run `npm run places` (it downloads about 650 MB from GeoNames into `.geonames/`, or reads `GEONAMES_DIR`) and commit `places/world.txt`.
 
