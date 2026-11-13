@@ -826,6 +826,9 @@ button {
   overflow: hidden;
   visibility: hidden;
 }
+.dd-select-sizer::before {
+  content: attr(data-label);
+}
 .dd-select-value.is-placeholder {
   font-family: var(--font-serif);
   font-style: italic;

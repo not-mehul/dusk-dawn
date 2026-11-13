@@ -368,7 +368,8 @@
   <!-- Like a native select, the field is as wide as its longest option allows, so it never jumps. -->
   <span class="dd-select-text">
     <span class="dd-select-value" class:is-placeholder={shown === undefined}>{shown ?? placeholder}</span>
-    {#each options as option, i (i)}<span class="dd-select-sizer" aria-hidden="true">{option.label}</span>{/each}
+    <!-- Drawn from an attribute, so the labels stay out of the field's text. -->
+    {#each options as option, i (i)}<span class="dd-select-sizer" data-label={option.label} aria-hidden="true"></span>{/each}
   </span>
   <svg
     class="dd-select-chevron"
