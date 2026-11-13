@@ -791,6 +791,344 @@ button {
   cursor: pointer;
 }
 
+/* ─── Select menu (§8.6.1) ───────────────────────────────────── */
+
+/* The field: a .select with a drawn chevron that turns as the menu opens. */
+.dd-select {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-right: 0.75rem;
+  background-image: none;
+}
+.dd-select[aria-expanded='true'] {
+  border-color: var(--accent-amber);
+  border-radius: var(--corner-md);
+}
+.dd-select:disabled {
+  background-color: var(--disabled-bg);
+  color: var(--text-faint);
+  cursor: default;
+}
+.dd-select-value {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.dd-select-value.is-placeholder {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--text-faint);
+}
+.dd-select-chevron {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  color: var(--text-dim);
+  transition:
+    rotate var(--spring-spatial-fast-dur) var(--spring-spatial-fast),
+    color var(--spring-effects-fast-dur) var(--spring-effects-fast);
+}
+.dd-select[aria-expanded='true'] .dd-select-chevron {
+  rotate: 180deg;
+  color: var(--accent-amber);
+}
+
+/* The menu: an opaque card in the top layer, under (or over) the field. */
+.dd-menu {
+  position: fixed;
+  inset: auto;
+  z-index: 1000;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: max-content;
+  margin: 0;
+  padding: var(--space-2);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--modal-bg);
+  color: var(--text-body);
+  border: 1px solid var(--border);
+  border-radius: var(--corner-lg);
+  box-shadow:
+    0 16px 40px rgba(var(--shadow-rgb), calc(0.55 * var(--shadow-strength))),
+    0 0 48px rgba(var(--accent-amber-rgb), 0.1),
+    inset 0 1px 0 rgba(var(--cream-rgb), 0.05);
+  font-family: var(--font-sans);
+  transform-origin: top center;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.dd-menu.above {
+  transform-origin: bottom center;
+}
+.dd-menu-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dd-menu-group + .dd-menu-group,
+.dd-option + .dd-menu-group,
+.dd-menu-group + .dd-option {
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--border-faint);
+}
+.dd-menu-group-label {
+  padding: 0.625rem 0.875rem 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.dd-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--corner-sm);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: var(--text-body);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--spring-effects-fast-dur) var(--spring-effects-fast),
+    border-radius var(--spring-spatial-fast-dur) var(--spring-spatial-fast);
+}
+.dd-option-label {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.dd-option-check {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--accent-amber);
+  visibility: hidden;
+}
+.dd-option[data-active] {
+  background: var(--hover-bg);
+  color: var(--text-heading);
+}
+/* The chosen option is lit and ticked, and rounds towards a pill (§6.4). */
+.dd-option[aria-selected='true'] {
+  background: rgba(var(--accent-amber-rgb), 0.14);
+  color: var(--text-heading);
+  font-weight: var(--weight-emphasized);
+  border-radius: var(--corner-xl);
+}
+.dd-option[aria-selected='true'][data-active] {
+  background: rgba(var(--accent-amber-rgb), 0.22);
+}
+.dd-option[aria-selected='true'] .dd-option-check {
+  visibility: visible;
+}
+.dd-option[aria-disabled='true'] {
+  color: var(--text-faint);
+  cursor: default;
+}
+/* While the keyboard drives the menu, the active option carries the focus ring. */
+.dd-select:focus-visible + .dd-menu .dd-option[data-active] {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+/* ─── Time picker (§8.6, Pickers) ────────────────────────────── */
+
+.dd-time-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.dd-time-field > svg {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--accent-amber);
+}
+.dd-time-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.dd-time-value.is-placeholder {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--text-faint);
+}
+.dd-picker-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 420px;
+}
+.dd-picker-head {
+  flex-direction: row;
+  align-items: center;
+}
+.dd-picker-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+/* Clocks share one six-wide grid. */
+.dd-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(max(3rem, calc((100% - 10px) / 6)), 1fr));
+  gap: 2px;
+}
+.dd-picker-cell {
+  min-height: 44px;
+  padding: 0 var(--space-1);
+  border-radius: var(--corner-sm);
+  background: var(--panel-bg-faint);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-body);
+  transition:
+    background-color var(--spring-effects-fast-dur) var(--spring-effects-fast),
+    border-radius var(--spring-spatial-fast-dur) var(--spring-spatial-fast);
+}
+.dd-picker-cell:hover {
+  background: var(--hover-bg);
+}
+.dd-picker-cell[aria-pressed='true'],
+.dd-picker-cell[aria-pressed='true']:hover {
+  background: var(--accent-bright);
+  color: var(--on-accent);
+  border-radius: var(--corner-full);
+}
+.dd-picker-cell:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ─── Checkbox (§8.6) ────────────────────────────────────────── */
+
+/* A drawn checkbox: put .check on <input type="checkbox">. The row or label
+   around it is the 44px target. */
+.check {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  border: 1.5px solid var(--text-dim);
+  border-radius: var(--corner-xs);
+  background: var(--input-bg);
+  cursor: pointer;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--spring-effects-fast-dur) var(--spring-effects-fast),
+    border-color var(--spring-effects-fast-dur) var(--spring-effects-fast),
+    border-radius var(--spring-spatial-fast-dur) var(--spring-spatial-fast),
+    scale var(--spring-spatial-fast-dur) var(--spring-spatial-fast);
+}
+.check::after {
+  content: '';
+  width: 0.55rem;
+  height: 0.3rem;
+  border: 2px solid var(--on-accent);
+  border-top: 0;
+  border-right: 0;
+  translate: 0 -1px;
+  rotate: -45deg;
+  scale: 0;
+  transition: scale var(--spring-spatial-fast-dur) var(--spring-spatial-fast);
+}
+.check:checked {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  border-radius: var(--corner-sm);
+}
+.check:checked::after {
+  scale: 1;
+}
+.check:active {
+  scale: var(--press-scale);
+}
+.check:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.check:disabled {
+  background: var(--disabled-bg);
+  border-color: var(--border);
+  cursor: default;
+}
+
+/* ─── Slider (§8.6) ──────────────────────────────────────────── */
+
+/* Put .range on <input type="range">: a 4px track, an amber fill where the
+   browser can draw one, and a round bright thumb, inside a 44px target. */
+.range {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--corner-full);
+  background: var(--chart-track);
+}
+.range::-moz-range-track {
+  height: 4px;
+  border-radius: var(--corner-full);
+  background: var(--chart-track);
+}
+.range::-moz-range-progress {
+  height: 4px;
+  border-radius: var(--corner-full);
+  background: var(--accent-amber);
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -8px;
+  border-radius: var(--corner-full);
+  background: var(--accent-bright);
+  box-shadow: 0 0 0 1px var(--on-accent);
+  transition: scale var(--spring-spatial-fast-dur) var(--spring-spatial-fast);
+}
+.range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--corner-full);
+  background: var(--accent-bright);
+  box-shadow: 0 0 0 1px var(--on-accent);
+}
+.range:active::-webkit-slider-thumb {
+  scale: 1.2;
+}
+.range:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.range:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
 /* ─── Theme toggle (§8.9) ────────────────────────────────────── */
 
 .theme-toggle {
@@ -822,7 +1160,7 @@ button {
   justify-content: center;
   width: var(--knob);
   height: var(--knob);
-  color: var(--text-faint);
+  color: var(--text-dim);
   transition: color var(--dur-toggle) var(--ease-standard);
 }
 .theme-toggle .toggle-icon svg {
@@ -851,7 +1189,8 @@ button {
   width: var(--knob);
   height: var(--knob);
   border-radius: var(--corner-full);
-  background: var(--accent-amber);
+  background: var(--accent-bright);
+  box-shadow: 0 0 12px rgba(var(--accent-bright-rgb), 0.35);
   transition:
     transform var(--spring-spatial-fast-dur) var(--spring-spatial-fast),
     scale var(--spring-spatial-fast-dur) var(--spring-spatial-fast);

@@ -17,7 +17,8 @@
 - `css/components.css`: the shared component styles.
 - `fonts/`: Fraunces, normal and italic (SIL Open Font License).
 - The need meter (`.need-meter`), and the pet tokens and living-subject rule for Nookling (style.md §3.7, §8.22, §11.2).
-- Svelte 5 components: `IconTabs`, `LoadingIndicator`, `Switch`, `TabRail`, `ThemeToggle`, `Toast` and `WavyProgress`.
+- Svelte 5 components: `IconTabs`, `LoadingIndicator`, `Select`, `Switch`, `TabRail`, `ThemeToggle`, `TimeField`, `Toast` and `WavyProgress`.
+- Themed replacements for the controls that would otherwise open Android's own pickers (style.md §8.6): `Select` (a menu in place of `<select>`), `TimeField` (a clock in place of `<input type="time">`), `.check` for checkboxes and `.range` for sliders, with `dismissOverlay()` for Android back.
 - Expressive helpers (style.md §11.3): `celebrate` (confetti in token colours), `play` (one-shot flourishes), `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs` (easter-egg tracking), `shapeClipPath` and `spring`. All of them respect reduced motion.
 - `dusk-dawn/places`: the world gazetteer for apps with a map (style.md §18.4). About 320,000 places from GeoNames (CC BY 4.0): every town of 1,000 people or more, every region, and landmarks, islands, mountains, lakes, parks and stations with an English Wikipedia article, each with its time zone and English, old and local names. `dusk-dawn/places/vite` ships the file with an app.
 - The `dusk-dawn` command: `check` (contrast in both themes), `colours` (no literal colours in an app's source), `css` and `kotlin` (theme files for other targets).
@@ -25,7 +26,7 @@
 ## Using it in an app
 
 ```sh
-npm install --save-dev github:not-mehul/dusk-dawn#v2.2.0
+npm install --save-dev github:not-mehul/dusk-dawn#v2.3.0
 ```
 
 ```css
@@ -38,7 +39,7 @@ npm install --save-dev github:not-mehul/dusk-dawn#v2.2.0
 // In a plain .ts module (state, platform code), import the helpers without the components:
 import { celebrate, createEggs } from 'dusk-dawn/expressive';
 // In components:
-import { LoadingIndicator, Switch, TabRail, ThemeToggle, Toast, WavyProgress, celebrate, konami } from 'dusk-dawn';
+import { LoadingIndicator, Select, Switch, TabRail, ThemeToggle, TimeField, Toast, WavyProgress, celebrate, dismissOverlay, konami } from 'dusk-dawn';
 ```
 
 ```json
@@ -67,7 +68,7 @@ npm run build   # regenerates css/tokens.css
 npm run check   # contrast, generated CSS up to date, no literal colours, svelte-check
 ```
 
-Then bump `version`, tag the release (`v2.2.0`), and move each app to the new tag in its own pull request. A new token or component is a minor version; a renamed or removed one is a major version.
+Then bump `version`, tag the release (`v2.3.0`), and move each app to the new tag in its own pull request. A new token or component is a minor version; a renamed or removed one is a major version.
 
 To refresh the places, run `npm run places` (it downloads about 650 MB from GeoNames into `.geonames/`, or reads `GEONAMES_DIR`) and commit `places/world.txt`.
 
