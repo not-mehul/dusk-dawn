@@ -890,6 +890,10 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
 
+**Fixed in 2.4.1**
+
+- A toast's action can be tapped while a modal is open (§8.12). The modal made the toast inert, so an Undo, or BookShelf's "Share with your nookling" after finishing a book, showed but did nothing until the modal closed.
+
 **Added in 2.4.0**
 
 - Compact icon tabs (§8.5.2): `IconTabs` takes `labels="selected"`, icons only with the selected tab's word beside its icon.
@@ -949,7 +953,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 ### 18.2 Adopting it in a new app
 
-1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.4.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
+1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.4.1`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
 2. Import the two stylesheets first, before any of the app's own CSS:
 
    ```css
