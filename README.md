@@ -74,6 +74,25 @@ To refresh the places, run `npm run places` (it downloads about 650 MB from GeoN
 
 Never edit `css/tokens.css` by hand, and never patch the package inside an app.
 
+## Dependency updates
+
+Every app's `renovate.json` is one line that extends the shared preset in [`renovate/apps.json`](renovate/apps.json), so the apps update the same way and the rules change in one place:
+
+```json
+{ "extends": ["github>not-mehul/dusk-dawn//renovate/apps"] }
+```
+
+What it does, once the [Renovate app](https://github.com/apps/renovate) is installed on the repos:
+
+- Once a month (the 1st, before 6am India time), at most four pull requests per app, and none merge on their own.
+- **All non-major dependencies**: the web tooling (Vite, Svelte, ESLint, Playwright …) in one pull request. The quick CI job is the review.
+- **Capacitor** and the **Android build** (AGP, the Gradle wrapper, androidx) in a pull request each, with a note to run the app builds by hand first, since quick CI doesn't build the APK.
+- A major version of anything gets its own pull request.
+- **dusk-dawn** itself: a pull request moving the pin as soon as a new tag exists, outside the monthly schedule.
+- Left alone, and changed by hand: Node in `.nvmrc`, and the JDK in the workflows (it follows the Android Gradle Plugin).
+
+The preset reads from `main`, so a change here applies to every app without a tag. An app adds its own rules after the `extends` line; Rosetta keeps pdf.js pinned that way.
+
 ## The Dusk & Dawn apps
 
 Every app below installs this package at a tag and takes its tokens, fonts, components and checks from it. Design changes happen here, never inside an app.
