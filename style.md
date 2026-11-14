@@ -510,7 +510,7 @@ Use it for focused tasks and confirmations that need attention: pickers, confirm
 
 - Centred card on `--modal-backdrop`. `--modal-bg` fill, 1px `rgba(amber,0.3)` border, `--corner-xl`, max width 560px, padding 1.75rem.
 - Shadow: `0 30px 80px rgba(var(--shadow-rgb), calc(0.7 * var(--shadow-strength))), 0 0 80px rgba(var(--accent-amber-rgb), 0.18), inset 0 1px 0 rgba(var(--cream-rgb), 0.05)`.
-- Decorative 1px corner brackets in `rgba(amber, 0.5)`, inset 14px with a soft inner corner, drawn over the card so they never affect layout.
+- Decorative 1px corner brackets in `rgba(amber, 0.5)`, inset 14px from the top-left and bottom-right with a soft inner corner. They belong to the **frame**: when a long modal scrolls they stay at its corners and the content passes under them, never with it. (They are drawn as background layers of the card, which a scroll container keeps still, so they never affect layout either.)
 - Header: optional eyebrow, then serif italic title, then the close icon button.
 - Entrance: fade plus `translateY(12px) scale(0.98)` to rest on the default spatial spring. Exit: 160ms fade.
 - Dismiss with the close button, a backdrop tap, Escape or system back. On Android, the predictive back gesture shrinks it to 0.9 and fades to 0.7 under the finger.
