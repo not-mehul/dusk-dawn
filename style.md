@@ -548,6 +548,7 @@ One component in all apps, at the bottom centre above the safe area and the FAB.
 - **Celebration toast** (`kind: 'celebrate'`): for a found easter egg or a real milestone. A bright amber border and glow, and it pops in on the slow spatial spring with a slight turn. Use it rarely, or it stops meaning anything.
 - `role="status"`, or `role="alert"` for failures.
 - One at a time: a new toast replaces the current one.
+- Always tappable, over a modal too. A modal `<dialog>` makes everything outside it inert, top-layer popovers included, so while one is open `Toast` keeps its regions inside the topmost modal, and puts them back in the page when it closes.
 
 ### 8.13 Notice banner
 
