@@ -443,13 +443,22 @@ Top-level and in-screen navigation. **One pattern in all three apps**, replacing
 
 #### 8.5.1 Icon tabs (top-level sections on a phone)
 
-The tab rail with a Lucide icon over each word, for an app's **top-level sections** when they are three to five and must all stay in view. `IconTabs` in this package; Mise uses it.
+The tab rail with a Lucide icon over each word, for an app's **top-level sections** when they are three to five and must all stay in view. `IconTabs` in this package; Mise, Ledger and Colophon use it.
 
 - The tabs **share the width evenly** (a grid of equal columns), so none is pushed off the edge, even with the phone's text size turned up. The word ellipsises before it ever scrolls.
 - Each tab is at least 56px tall: a 22px icon (1.5 stroke, §9) over the word in mono caps at 0.625rem, tracked 0.08em.
 - Inactive tabs are `--text-dim`; the active tab's word is `--text-heading` and its icon `--accent-amber`. The 3px rule sits **centred under the icon, at most 56px wide,** and springs between tabs as in the tab rail.
 - A count sits on the icon's top-right corner as a filled badge (`--accent-bright`, `--on-accent`), capped at 99+.
-- Still under the page header, never a bottom bar. In-screen navigation (filters, sub-views) keeps the word-only tab rail.
+- Still under the page header, never a bottom bar. In-screen navigation (filters, sub-views) keeps the word-only tab rail, or the compact form below.
+
+#### 8.5.2 Compact icon tabs
+
+`IconTabs` with `labels="selected"`: icons in a row, and **only the selected tab shows its word**, beside its icon. For a short set of filters whose icons read on their own, where five words would crowd a phone or need a second line: BookShelf's All · Books · Movies · TV · Quotes, and its floating bar.
+
+- Each tab is at least 44px wide and 48px tall. The icons spread across the width, and the selected tab takes what it needs for its word. The word opens only when it fits whole: on a narrow phone or at large text sizes the selected tab keeps to its amber icon and rule, rather than showing a clipped word.
+- Choosing a tab opens its word on the default spatial spring while the old one closes, and the 3px rule runs under the icon and word as they open. Under reduced motion it simply changes.
+- The word is always in the tab, only clipped, so every tab keeps its accessible name, and the count stays on the icon's corner.
+- Use it only where each icon is unmistakable. Top-level sections keep words under every icon (§8.5.1).
 
 ### 8.6 Inputs
 
@@ -510,7 +519,7 @@ Use it for focused tasks and confirmations that need attention: pickers, confirm
 
 - Centred card on `--modal-backdrop`. `--modal-bg` fill, 1px `rgba(amber,0.3)` border, `--corner-xl`, max width 560px, padding 1.75rem.
 - Shadow: `0 30px 80px rgba(var(--shadow-rgb), calc(0.7 * var(--shadow-strength))), 0 0 80px rgba(var(--accent-amber-rgb), 0.18), inset 0 1px 0 rgba(var(--cream-rgb), 0.05)`.
-- Decorative 1px corner brackets in `rgba(amber, 0.5)`, inset 14px with a soft inner corner, drawn over the card so they never affect layout.
+- Decorative 1px corner brackets in `rgba(amber, 0.5)`, inset 14px from the top-left and bottom-right with a soft inner corner. They belong to the **frame**: when a long modal scrolls they stay at its corners and the content passes under them, never with it. (They are drawn as background layers of the card, which a scroll container keeps still, so they never affect layout either.)
 - Header: optional eyebrow, then serif italic title, then the close icon button.
 - Entrance: fade plus `translateY(12px) scale(0.98)` to rest on the default spatial spring. Exit: 160ms fade.
 - Dismiss with the close button, a backdrop tap, Escape or system back. On Android, the predictive back gesture shrinks it to 0.9 and fades to 0.7 under the finger.
@@ -880,6 +889,15 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
 
+**Added in 2.4.0**
+
+- Compact icon tabs (§8.5.2): `IconTabs` takes `labels="selected"`, icons only with the selected tab's word beside its icon.
+- Each icon tab's name is its word, then its count ("Movies, 1"). The count is drawn before the word, so a screen reader used to hear "1 Movies".
+
+**Fixed in 2.4.0**
+
+- A modal's corner brackets stay on its frame (§8.10). They were pseudo-elements inside the scrolling card, so in a long modal the top one scrolled away and the bottom one rode over the content (BookShelf's ratings and status buttons).
+
 **Fixed in 2.3.1**
 
 - A `Select` field is as wide as its longest option allows, like a native select, so it never jumps when the value changes. In a narrow grid column it could shrink until its value broke mid-word (Nookling's away days).
@@ -930,7 +948,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 ### 18.2 Adopting it in a new app
 
-1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.3.1`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
+1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.4.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
 2. Import the two stylesheets first, before any of the app's own CSS:
 
    ```css

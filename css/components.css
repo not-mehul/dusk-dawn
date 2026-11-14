@@ -685,6 +685,65 @@ button {
   text-transform: uppercase;
 }
 
+/* Compact icon tabs (§8.5.2): icons in a row; the selected tab opens to
+   show its word beside the icon, on the default spatial spring. The word stays
+   in the tab (only clipped), so every tab keeps its accessible name. */
+.icon-tabs-compact {
+  display: flex;
+  justify-content: space-between;
+}
+.icon-tabs-compact [role='tab'] {
+  flex: 0 0 auto;
+  flex-direction: row;
+  min-width: 44px;
+  min-height: 48px;
+  padding: var(--space-2) var(--space-2) var(--space-3);
+}
+.icon-tabs-compact [role='tab'][aria-selected='true'] {
+  flex: 0 1 auto;
+}
+/* The last tab's count overhangs to the right: room for it inside the rail. */
+.icon-tabs-compact [role='tab']:last-of-type:has(.badge) {
+  padding-right: calc(var(--space-2) + 0.5rem);
+}
+.icon-tab-inner {
+  display: grid;
+  grid-template-columns: auto 0fr;
+  align-items: center;
+  min-width: 0;
+  transition: grid-template-columns var(--spring-spatial-default-dur) var(--spring-spatial-default);
+}
+.icon-tabs-compact [role='tab'][aria-selected='true'] .icon-tab-inner {
+  grid-template-columns: auto 1fr;
+}
+.icon-tab-reveal {
+  min-width: 0;
+  overflow: hidden;
+}
+.icon-tabs-compact .icon-tab-word {
+  display: block;
+  padding-left: var(--space-2);
+  font-size: 0.6875rem;
+  opacity: 0;
+  transition: opacity var(--spring-effects-fast-dur) var(--spring-effects-fast);
+}
+.icon-tabs-compact [role='tab'][aria-selected='true'] .icon-tab-word {
+  opacity: 1;
+}
+/* The count sits on the icon's corner and overhangs it: the word starts
+   clear of it, at any text size. */
+.icon-tabs-compact [role='tab']:has(.badge) .icon-tab-word {
+  padding-left: calc(10px + 0.75rem);
+}
+/* Not enough room for the selected word whole (a narrow phone, large text):
+   the icon alone, amber, with the rule under it. */
+.icon-tabs-compact.is-tight [role='tab'][aria-selected='true'] .icon-tab-inner {
+  grid-template-columns: auto 0fr;
+}
+.icon-tabs-compact.is-tight [role='tab'][aria-selected='true'] .icon-tab-word {
+  opacity: 0;
+}
+
 /* ─── Inputs (§8.6) ──────────────────────────────────────────── */
 
 .field {
@@ -1260,7 +1319,24 @@ body:has(.modal-dialog[open], .sheet[open]) {
   flex-direction: column;
   gap: var(--space-4);
   padding: 1.75rem;
-  background: var(--modal-bg);
+  /* Corner brackets, 14px in from the top-left and bottom-right of the frame.
+     They are background layers, not pseudo-elements: a scroll container's own
+     background stays put while its content scrolls, so they keep to the frame
+     and never ride over the content (style.md §8.10). */
+  --bracket: rgba(var(--accent-amber-rgb), 0.5);
+  --bracket-r: var(--corner-sm);
+  --bracket-arm: calc(14px - var(--bracket-r));
+  --bracket-arc: transparent calc(var(--bracket-r) - 1.25px),
+    var(--bracket) calc(var(--bracket-r) - 0.75px) calc(var(--bracket-r) - 0.25px),
+    transparent calc(var(--bracket-r) + 0.25px);
+  background:
+    radial-gradient(circle at 100% 100%, var(--bracket-arc)) 14px 14px / var(--bracket-r) var(--bracket-r) no-repeat,
+    linear-gradient(var(--bracket), var(--bracket)) calc(14px + var(--bracket-r)) 14px / var(--bracket-arm) 1px no-repeat,
+    linear-gradient(var(--bracket), var(--bracket)) 14px calc(14px + var(--bracket-r)) / 1px var(--bracket-arm) no-repeat,
+    radial-gradient(circle at 0 0, var(--bracket-arc)) right 14px bottom 14px / var(--bracket-r) var(--bracket-r) no-repeat,
+    linear-gradient(var(--bracket), var(--bracket)) right calc(14px + var(--bracket-r)) bottom 14px / var(--bracket-arm) 1px no-repeat,
+    linear-gradient(var(--bracket), var(--bracket)) right 14px bottom calc(14px + var(--bracket-r)) / 1px var(--bracket-arm) no-repeat,
+    var(--modal-bg);
   border: 1px solid rgba(var(--accent-amber-rgb), 0.3);
   border-radius: var(--corner-xl);
   box-shadow:
@@ -1268,30 +1344,6 @@ body:has(.modal-dialog[open], .sheet[open]) {
     0 0 80px rgba(var(--accent-amber-rgb), 0.18),
     inset 0 1px 0 rgba(var(--cream-rgb), 0.05);
   animation: modal-in var(--spring-spatial-default-dur) var(--spring-spatial-default);
-}
-/* Corner brackets, drawn over the card so they never affect layout. */
-.modal-card::before,
-.modal-card::after {
-  content: '';
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 0 solid rgba(var(--accent-amber-rgb), 0.5);
-  pointer-events: none;
-}
-.modal-card::before {
-  top: 14px;
-  left: 14px;
-  border-top-left-radius: var(--corner-sm);
-  border-top-width: 1px;
-  border-left-width: 1px;
-}
-.modal-card::after {
-  bottom: 14px;
-  right: 14px;
-  border-bottom-right-radius: var(--corner-sm);
-  border-bottom-width: 1px;
-  border-right-width: 1px;
 }
 .modal-dialog.closing {
   animation: fade-out var(--dur-exit) ease-in forwards;

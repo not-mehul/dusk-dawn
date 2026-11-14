@@ -26,7 +26,7 @@
 ## Using it in an app
 
 ```sh
-npm install --save-dev github:not-mehul/dusk-dawn#v2.3.1
+npm install --save-dev github:not-mehul/dusk-dawn#v2.4.0
 ```
 
 ```css
