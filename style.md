@@ -889,6 +889,15 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
 
+**Added in 2.4.0**
+
+- Compact icon tabs (§8.5.2): `IconTabs` takes `labels="selected"`, icons only with the selected tab's word beside its icon.
+- Each icon tab's name is its word, then its count ("Movies, 1"). The count is drawn before the word, so a screen reader used to hear "1 Movies".
+
+**Fixed in 2.4.0**
+
+- A modal's corner brackets stay on its frame (§8.10). They were pseudo-elements inside the scrolling card, so in a long modal the top one scrolled away and the bottom one rode over the content (BookShelf's ratings and status buttons).
+
 **Fixed in 2.3.1**
 
 - A `Select` field is as wide as its longest option allows, like a native select, so it never jumps when the value changes. In a narrow grid column it could shrink until its value broke mid-word (Nookling's away days).
@@ -939,7 +948,7 @@ Components that depend on an app's own state, such as the modal's overlay stack,
 
 ### 18.2 Adopting it in a new app
 
-1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.3.1`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
+1. Install it at a tag: `npm install --save-dev github:not-mehul/dusk-dawn#v2.4.0`. Pin a tag, never a branch, so a design change reaches an app only when the app chooses to take it.
 2. Import the two stylesheets first, before any of the app's own CSS:
 
    ```css
