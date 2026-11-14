@@ -1,0 +1,53 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Dependency updates for every Dusk & Dawn app: once a month, grouped, and nothing merged without Mehul. Each app's renovate.json extends this; see README.md.",
+  "extends": [
+    "config:recommended",
+    "group:allNonMajor",
+    ":semanticCommitsDisabled",
+    ":disableDependencyDashboard"
+  ],
+  "timezone": "Asia/Kolkata",
+  "schedule": ["* 0-5 1 * *"],
+  "minimumReleaseAge": "3 days",
+  "prConcurrentLimit": 4,
+  "automerge": false,
+  "packageRules": [
+    {
+      "description": "Capacitor core and plugins move together: @capacitor/android is also the Android project's library, so these change the APK.",
+      "matchPackageNames": ["@capacitor/**", "@capacitor-community/**"],
+      "groupName": "Capacitor",
+      "prBodyNotes": [
+        "These change the Android app. Before merging: Actions → CI → Run workflow on this branch with the app builds ticked."
+      ],
+      "groupSlug": "capacitor"
+    },
+    {
+      "description": "The Android build (AGP, the Gradle wrapper, androidx, Kotlin) moves together.",
+      "matchManagers": ["gradle", "gradle-wrapper"],
+      "groupName": "Android build",
+      "prBodyNotes": [
+        "These change the Android app. Before merging: Actions → CI → Run workflow on this branch with the app builds ticked."
+      ],
+      "groupSlug": "android-build"
+    },
+    {
+      "description": "The JDK in the workflows follows what the Android Gradle Plugin needs, and changes by hand with it.",
+      "matchDepNames": ["java-jdk"],
+      "enabled": false
+    },
+    {
+      "description": "Node follows .nvmrc, changed by hand: 24 for Waymark and BookShelf, 22 for the rest.",
+      "matchManagers": ["nvm"],
+      "enabled": false
+    },
+    {
+      "description": "The design package moves by tag, in its own pull request, as soon as Mehul tags a release.",
+      "matchDepNames": ["dusk-dawn"],
+      "groupName": null,
+      "schedule": ["at any time"],
+      "minimumReleaseAge": null,
+      "groupSlug": null
+    }
+  ]
+}
