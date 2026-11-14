@@ -685,6 +685,65 @@ button {
   text-transform: uppercase;
 }
 
+/* Compact icon tabs (§8.5.2): icons in a row; the selected tab opens to
+   show its word beside the icon, on the default spatial spring. The word stays
+   in the tab (only clipped), so every tab keeps its accessible name. */
+.icon-tabs-compact {
+  display: flex;
+  justify-content: space-between;
+}
+.icon-tabs-compact [role='tab'] {
+  flex: 0 0 auto;
+  flex-direction: row;
+  min-width: 44px;
+  min-height: 48px;
+  padding: var(--space-2) var(--space-2) var(--space-3);
+}
+.icon-tabs-compact [role='tab'][aria-selected='true'] {
+  flex: 0 1 auto;
+}
+/* The last tab's count overhangs to the right: room for it inside the rail. */
+.icon-tabs-compact [role='tab']:last-of-type:has(.badge) {
+  padding-right: calc(var(--space-2) + 0.5rem);
+}
+.icon-tab-inner {
+  display: grid;
+  grid-template-columns: auto 0fr;
+  align-items: center;
+  min-width: 0;
+  transition: grid-template-columns var(--spring-spatial-default-dur) var(--spring-spatial-default);
+}
+.icon-tabs-compact [role='tab'][aria-selected='true'] .icon-tab-inner {
+  grid-template-columns: auto 1fr;
+}
+.icon-tab-reveal {
+  min-width: 0;
+  overflow: hidden;
+}
+.icon-tabs-compact .icon-tab-word {
+  display: block;
+  padding-left: var(--space-2);
+  font-size: 0.6875rem;
+  opacity: 0;
+  transition: opacity var(--spring-effects-fast-dur) var(--spring-effects-fast);
+}
+.icon-tabs-compact [role='tab'][aria-selected='true'] .icon-tab-word {
+  opacity: 1;
+}
+/* The count sits on the icon's corner and overhangs it: the word starts
+   clear of it, at any text size. */
+.icon-tabs-compact [role='tab']:has(.badge) .icon-tab-word {
+  padding-left: calc(10px + 0.75rem);
+}
+/* Not enough room for the selected word whole (a narrow phone, large text):
+   the icon alone, amber, with the rule under it. */
+.icon-tabs-compact.is-tight [role='tab'][aria-selected='true'] .icon-tab-inner {
+  grid-template-columns: auto 0fr;
+}
+.icon-tabs-compact.is-tight [role='tab'][aria-selected='true'] .icon-tab-word {
+  opacity: 0;
+}
+
 /* ─── Inputs (§8.6) ──────────────────────────────────────────── */
 
 .field {
