@@ -1472,6 +1472,7 @@ body:has(.modal-dialog[open], .sheet[open]) {
 
 /* ─── Toast and undo (§8.12) ─────────────────────────────────── */
 
+.toast-layer,
 .toast-region {
   display: contents;
 }
