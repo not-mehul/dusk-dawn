@@ -1,6 +1,6 @@
 <h1 align="center">dusk-dawn</h1>
 
-<p align="center"><em>Editorial Dusk &amp; Dawn, the design system behind seven apps.</em></p>
+<p align="center"><em>Editorial Dusk &amp; Dawn, the design system behind five apps.</em></p>
 
 <p align="center">
   Svelte 5 package&nbsp;·&nbsp;<a href="https://github.com/not-mehul/dusk-dawn/releases/latest">Latest release</a>&nbsp;·&nbsp;MIT&nbsp;·&nbsp;Created by <strong>Mehul Sen</strong>
@@ -8,7 +8,7 @@
 
 ---
 
-**Editorial Dusk & Dawn**, Material 3 Expressive edition: the design system shared by Waymark, BookShelf, Ledger, Colophon, Rosetta, Mise and Nookling, as one package. The full spec is [`style.md`](style.md); §18 covers this package.
+**Editorial Dusk & Dawn**, Material 3 Expressive edition: the design system shared by Waymark, BookShelf, Ledger, Rosetta and Mise, as one package. The full spec is [`style.md`](style.md); §18 covers this package.
 
 ## What's in it
 
@@ -16,7 +16,6 @@
 - `css/tokens.css`: the theme file generated from `tokens.json`, with the Fraunces `@font-face` rules.
 - `css/components.css`: the shared component styles.
 - `fonts/`: Fraunces, normal and italic (SIL Open Font License).
-- The need meter (`.need-meter`), and the pet tokens and living-subject rule for Nookling (style.md §3.7, §8.22, §11.2).
 - Svelte 5 components: `IconTabs`, `LoadingIndicator`, `Select`, `Switch`, `TabRail`, `ThemeToggle`, `TimeField`, `Toast` and `WavyProgress`.
 - Themed replacements for the controls that would otherwise open Android's own pickers (style.md §8.6): `Select` (a menu in place of `<select>`), `TimeField` (a clock in place of `<input type="time">`), `.check` for checkboxes and `.range` for sliders, with `dismissOverlay()` for Android back.
 - Expressive helpers (style.md §11.3): `celebrate` (confetti in token colours), `play` (one-shot flourishes), `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs` (easter-egg tracking), `shapeClipPath` and `spring`. All of them respect reduced motion.
@@ -26,7 +25,7 @@
 ## Using it in an app
 
 ```sh
-npm install --save-dev github:not-mehul/dusk-dawn#v2.4.1
+npm install --save-dev github:not-mehul/dusk-dawn#v3.0.0
 ```
 
 ```css
@@ -76,22 +75,14 @@ Never edit `css/tokens.css` by hand, and never patch the package inside an app.
 
 ## Dependency updates
 
-Every app's `renovate.json` is one line that extends the shared preset in [`renovate/apps.json`](renovate/apps.json), so the apps update the same way and the rules change in one place:
+Updates are done by hand; there is no Renovate or other bot. To move an app to a new tag of this package:
 
-```json
-{ "extends": ["github>not-mehul/dusk-dawn//renovate/apps"] }
+```sh
+npm install --save-dev github:not-mehul/dusk-dawn#vX.Y.Z
+npm run check && npm run test:e2e
 ```
 
-What it does, once the [Renovate app](https://github.com/apps/renovate) is installed on the repos:
-
-- Once a month (the 1st, before 6am India time), at most four pull requests per app, and none merge on their own.
-- **All non-major dependencies**: the web tooling (Vite, Svelte, ESLint, Playwright …) in one pull request. The quick CI job is the review.
-- **Capacitor** and the **Android build** (AGP, the Gradle wrapper, androidx) in a pull request each, with a note to run the app builds by hand first, since quick CI doesn't build the APK.
-- A major version of anything gets its own pull request.
-- **dusk-dawn** itself: a pull request moving the pin as soon as a new tag exists, outside the monthly schedule.
-- Left alone, and changed by hand: Node in `.nvmrc`, and the JDK in the workflows (it follows the Android Gradle Plugin).
-
-The preset reads from `main`, so a change here applies to every app without a tag. An app adds its own rules after the `extends` line; Rosetta keeps pdf.js pinned that way.
+Then open one pull request per app. Node follows each app's `.nvmrc`, and the JDK in the workflows follows the Android Gradle Plugin.
 
 ## The Dusk & Dawn apps
 
@@ -102,10 +93,8 @@ Every app below installs this package at a tag and takes its tokens, fonts, comp
 | [Waymark](https://github.com/not-mehul/Waymark) | Your whole trip, offline: flights, stays, plans and costs on one timeline |
 | [BookShelf](https://github.com/not-mehul/BookShelf) | Books, films, shows and the lines worth keeping |
 | [Ledger](https://github.com/not-mehul/Ledger) | A record of cities, scored on what matters to you |
-| [Colophon](https://github.com/not-mehul/Colophon) | Inspect, fix and rebind EPUB editions |
 | [Rosetta](https://github.com/not-mehul/Rosetta) | A quiet library and reader for books, papers and notes |
 | [Mise](https://github.com/not-mehul/Mise) | Recipes from anywhere, cooked one step at a time |
-| [Nookling](https://github.com/not-mehul/Nookling) | A small round friend to feed, play with and put to bed |
 
 ## Credits
 
