@@ -5,6 +5,10 @@
   // The app passes each icon as a snippet, drawn in its own Lucide set.
   // labels="selected" (§8.5.2) is the compact form: icons in a row, and only
   // the selected tab opens to show its word beside the icon.
+  // A tab's name is its word, then its count ("Movies, 1"). The count is drawn
+  // on the icon, before the word, so the drawn badge is hidden from assistive
+  // tech and a hidden ", 1" follows the word. There is no aria-label, so the
+  // name is the visible word and voice control finds the tab by it (WCAG 2.5.3).
   import { tick, type Snippet } from 'svelte';
 
   interface Tab {
@@ -125,7 +129,6 @@
       id={tab.domId}
       aria-controls={tab.controls}
       aria-selected={tab.id === value}
-      aria-label={tab.badge ? `${tab.label}, ${tab.badge}` : tab.label}
       tabindex={tab.id === value || (!hasValue && i === 0) ? 0 : -1}
       onclick={() => onselect(tab.id)}
     >
@@ -133,16 +136,18 @@
         <span class="icon-tab-inner">
           <span class="icon-tab-glyph">
             {@render tab.icon()}
-            {#if tab.badge}<span class="badge">{tab.badge > 99 ? '99+' : tab.badge}</span>{/if}
+            {#if tab.badge}<span class="badge" aria-hidden="true">{tab.badge > 99 ? '99+' : tab.badge}</span>{/if}
           </span>
           <span class="icon-tab-reveal"><span class="icon-tab-word">{tab.label}</span></span>
+          {#if tab.badge}<span class="visually-hidden">, {tab.badge}</span>{/if}
         </span>
       {:else}
         <span class="icon-tab-glyph">
           {@render tab.icon()}
-          {#if tab.badge}<span class="badge">{tab.badge > 99 ? '99+' : tab.badge}</span>{/if}
+          {#if tab.badge}<span class="badge" aria-hidden="true">{tab.badge > 99 ? '99+' : tab.badge}</span>{/if}
         </span>
         <span class="icon-tab-word">{tab.label}</span>
+        {#if tab.badge}<span class="visually-hidden">, {tab.badge}</span>{/if}
       {/if}
     </button>
   {/each}
