@@ -434,7 +434,7 @@ The tab rail with a Lucide icon over each word, for an app's **top-level section
 - The tabs **share the width evenly** (a grid of equal columns), so none is pushed off the edge, even with the phone's text size turned up. The word ellipsises before it ever scrolls.
 - Each tab is at least 56px tall: a 22px icon (1.5 stroke, §9) over the word in mono caps at 0.625rem, tracked 0.08em.
 - Inactive tabs are `--text-dim`; the active tab's word is `--text-heading` and its icon `--accent-amber`. The 3px rule sits **centred under the icon, at most 56px wide,** and springs between tabs as in the tab rail.
-- A count sits on the icon's top-right corner as a filled badge (`--accent-bright`, `--on-accent`), capped at 99+.
+- A count sits on the icon's top-right corner as a filled badge (`--accent-bright`, `--on-accent`), capped at 99+. The badge is hidden from assistive tech; a visually hidden ", 2" after the word carries the count, so the tab's name starts with the word it shows ("Logbook, 2").
 - Still under the page header, never a bottom bar. In-screen navigation (filters, sub-views) keeps the word-only tab rail, or the compact form below.
 
 #### 8.5.2 Compact icon tabs
@@ -869,6 +869,10 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - New shared components: `LoadingIndicator` (§8.20) and `WavyProgress` (§8.21). The connected segmented control, pill switch and theme toggle, celebration toast, and the drifting empty-state icon.
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
+
+**Fixed in 3.0.1**
+
+- An icon tab with a count is named by its visible word again (§8.5.1, WCAG 2.5.3 label in name). Since 2.4.0 its `aria-label` was "Logbook, 2" while the screen showed "2 Logbook", so voice control couldn't find it by what it showed. The drawn badge is now hidden from assistive tech and a visually hidden ", 2" follows the word; the name a screen reader hears is still "Logbook, 2".
 
 **Removed in 3.0.0**
 
