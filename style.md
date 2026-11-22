@@ -426,7 +426,7 @@ Top-level and in-screen navigation. **One pattern in all three apps**, replacing
 - Horizontally scrollable when it overflows, with no visible scrollbar. Keep the active tab in view.
 - A count badge may follow a label.
 - Placed under the page header. **No bottom navigation bar.** These apps have three to five top-level sections and a FAB, and the tab rail keeps the editorial top-of-page structure.
-- **On a phone, the top-level tabs stick to the top** as the page scrolls (`.tab-bar-sticky` around them), on a frosted strip of `--bg-grad-top` that starts under the status bar. The page header scrolls away above them, so every section stays one tap away without a bottom bar.
+- **On a phone, the top-level tabs stick to the top** as the page scrolls (`.tab-bar-sticky` around them), on a near-opaque strip of `--bg-grad-top` that starts under the status bar, so nothing reads through it. The page header scrolls away above them, so every section stays one tap away without a bottom bar.
 
 #### 8.5.1 Icon tabs (top-level sections on a phone)
 
@@ -587,7 +587,7 @@ The same structure in every app, in a sheet on phones:
 
 Each group starts with a section label. Rows are hairline-divided. A row's control goes on the right, and a hint goes under the label.
 
-**Settings rows** (`.settings-group`, `.settings-row`): at least 56px tall, an `--accent-amber` icon (`.settings-row-icon`, 20px), the title in `--text-heading` at 0.9375rem with an optional one-line hint under it (`.settings-row-text`, `.settings-row-title`, `.settings-row-hint`), and on the right a value in mono (`.settings-row-value`), a control, or a chevron (`.settings-row-chevron`) when the row opens something. A row that opens something is a `<button>`. A hint is one line; anything longer belongs on the screen the row opens. Each group has at most one primary button, for the action people come for ("Back up now").
+**Settings rows** (`.settings-group`, `.settings-row`): at least 56px tall, an `--accent-amber` icon (`.settings-row-icon`, 20px), the title in `--text-heading` at 0.9375rem with an optional one-line hint under it (`.settings-row-text`, `.settings-row-title`, `.settings-row-hint`), and on the right a value in mono (`.settings-row-value`), a control, or a chevron (`.settings-row-chevron`) when the row opens something. A row that opens something is a `<button>`. A hint is a short phrase that may wrap, never cut off mid-word; anything longer goes in a hint paragraph under the group, or on the screen the row opens. Each group has at most one primary button, for the action people come for ("Back up now").
 
 ### 8.18 Switch row
 

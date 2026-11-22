@@ -1793,15 +1793,16 @@ button.notice > .notice-chevron {
 }
 
 /* ─── Sticky tab bar (§8.5) ──────────────────────────────────── */
-/* The tab row stays at the top as the page scrolls, over a frosted strip of
-   the page's own top colour, so it never reads as a separate bar. */
+/* The tab row stays at the top as the page scrolls, over a strip of the
+   page's own top colour (a touch of frost, never see-through), so it never
+   reads as a separate bar. */
 
 .tab-bar-sticky {
   position: sticky;
   top: 0;
   z-index: 30;
   padding-top: var(--inset-top);
-  background: color-mix(in srgb, var(--bg-grad-top) 86%, transparent);
+  background: color-mix(in srgb, var(--bg-grad-top) 96%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -1901,14 +1902,11 @@ button.settings-row:disabled {
   font-size: 0.9375rem;
 }
 .settings-row-hint {
-  overflow: hidden;
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 0.8125rem;
   line-height: 1.45;
   color: var(--text-dim);
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .settings-row-value {
   flex-shrink: 0;
