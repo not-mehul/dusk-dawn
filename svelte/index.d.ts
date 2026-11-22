@@ -12,3 +12,4 @@ export { default as WavyProgress } from './WavyProgress.svelte';
 export type { SelectOption } from './Select.svelte';
 export * from './expressive.js';
 export * from './overlay.js';
+export * from './toast-lift.js';
