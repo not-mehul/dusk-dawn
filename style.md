@@ -612,7 +612,7 @@ Material 3 Expressive's wavy progress bar (`WavyProgress`): a 4px rounded stroke
 For a long form whose one forward action would otherwise sit at the bottom of several screens: Ledger's entry form. The bar (`.action-bar`) is held at the bottom of the screen, above the safe area, while the form scrolls, and comes to rest at the form's end.
 
 - A pill of `--modal-bg` with a 1px `rgba(amber, 0.3)` border and the toast's shadow. On the left a short live summary (`.action-bar-summary`: a score dial and its tier, a total, a count); on the right the primary button, and at most one muted or icon button before it.
-- While the on-screen keyboard is up, the bar steps aside (`data-hidden="true"`) so it never covers the field being typed in, and returns when the keyboard closes.
+- It stays while the on-screen keyboard is up, so Save is one tap from the last field. The page keeps the focused field clear of it (`scroll-padding-bottom` while an `.action-bar` is on the page), so the bar never covers what is being typed.
 - It lifts the toast above itself (§8.12).
 - The form's primary button lives in the bar only, so a screen still has one.
 

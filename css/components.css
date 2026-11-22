@@ -1823,9 +1823,10 @@ button.notice > .notice-chevron {
   border: 1px solid rgba(var(--accent-amber-rgb), 0.3);
   border-radius: var(--corner-full);
   box-shadow: 0 12px 40px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-strength)));
-  transition:
-    translate var(--spring-spatial-default-dur) var(--spring-spatial-default),
-    opacity var(--spring-effects-fast-dur) var(--spring-effects-fast);
+}
+/* A field that takes focus scrolls clear of the bar, above the keyboard too. */
+html:has(.action-bar) {
+  scroll-padding-bottom: calc(var(--inset-bottom) + 6rem);
 }
 .action-bar-summary {
   flex: 1;
@@ -1836,12 +1837,6 @@ button.notice > .notice-chevron {
 }
 .action-bar-summary > :last-child {
   min-width: 0;
-}
-/* While the keyboard is up the bar steps aside, so it never sits on the field. */
-.action-bar[data-hidden='true'] {
-  translate: 0 calc(100% + var(--space-5));
-  opacity: 0;
-  pointer-events: none;
 }
 
 /* ─── Settings rows (§8.17) ──────────────────────────────────── */
