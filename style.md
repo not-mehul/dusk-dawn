@@ -286,7 +286,7 @@ Sizes are in `rem` on a 16px root. Never shrink the root on mobile.
 | Data | 0.875rem / 1.3 | Mono | Times, codes, flight numbers |
 | Data small | 0.75rem / 1.35 | Mono | Metadata in rows |
 | Section label | 0.6875rem, tracked 0.25em, caps | Mono | `--text-dim`. Eyebrows, section markers, tab rail |
-| Field label | 0.625rem, tracked 0.2em, caps | Mono | `--text-dim`. Above every field |
+| Field label | 0.6875rem, tracked 0.2em, caps | Mono | `--text-dim`. Above every field |
 | Hint / footnote | 0.8125rem / 1.55 | Serif italic | `--text-dim` |
 | Display emphasized | 3.5rem / 1, `-0.03em` | Serif 600 | `.t-display-emphasized`; the italic word goes 760 in `--accent-amber`. Celebrations, year-in-review, a perfect score |
 | Step | `clamp(1.625rem, 4.5vw + 0.5rem, 2.5rem)` / 1.35 | Serif | `--text-heading`. One instruction at a time, read from arm's length: Mise's cooking mode (`.t-step`) |
@@ -426,6 +426,7 @@ Top-level and in-screen navigation. **One pattern in all three apps**, replacing
 - Horizontally scrollable when it overflows, with no visible scrollbar. Keep the active tab in view.
 - A count badge may follow a label.
 - Placed under the page header. **No bottom navigation bar.** These apps have three to five top-level sections and a FAB, and the tab rail keeps the editorial top-of-page structure.
+- **On a phone, the top-level tabs stick to the top** as the page scrolls (`.tab-bar-sticky` around them), on a near-opaque strip of `--bg-grad-top` that starts under the status bar, so nothing reads through it. The page header scrolls away above them, so every section stays one tap away without a bottom bar.
 
 #### 8.5.1 Icon tabs (top-level sections on a phone)
 
@@ -494,10 +495,11 @@ One line: back control, title and at most one action, on a shared baseline.
 
 - **Top-level screen**: an eyebrow (section label style, the app's name or the date), the page title (serif, with one italic amber word if it has one), an optional tagline, and the theme toggle at the right.
 - **Secondary screen**: back chevron, card-title-size serif title, and one icon action. No eyebrow and no explanatory paragraph. Explanations go next to the control they explain.
+- **Compact header**: for top-level sections after the first, and for secondary screens, once the full header has been seen. One line at least 48px tall (`.screen-header`): an optional back button (`.screen-header-back`, an icon button), the title at 1.5rem in the serif with its italic word in `--accent-amber` (`.screen-header-title`), and up to two icon actions on the right (`.screen-header-actions`). The first section keeps the full header with its eyebrow and tagline, so the app still opens on its title page.
 
 ### 8.9 Theme toggle
 
-A pill track (`--input-bg`, 1px `--border`) holding a moon and a sun, with a round sliding `--accent-bright` knob and a soft glow of the same colour. The icon under the knob is `--on-accent` (8:1 or better in both themes), the other is `--text-dim`. The knob moves on the fast spatial spring and squashes slightly under the finger; the sun's rays turn 90° as Dawn arrives and the moon tips as Dusk does. `role="switch"`, operable by Space and Enter, with `aria-checked` showing Dawn. Geometry is derived from three numbers (track, knob and inset), so each icon sits exactly under the knob.
+A pill track (`--input-bg`, 1px `--border`) holding a moon and a sun, with a round sliding `--accent-bright` knob and a soft glow of the same colour. The icon under the knob is `--on-accent` (8:1 or better in both themes), the other is `--text-dim`. The knob moves on the fast spatial spring and squashes slightly under the finger; the sun's rays turn 90° as Dawn arrives and the moon tips as Dusk does. `role="switch"`, operable by Space and Enter, with `aria-checked` showing Dawn. Geometry is derived from three numbers (track, knob and inset), so each icon sits exactly under the knob. The track is 60×32px, and an invisible margin around it makes the touch target 64×46px (§14).
 
 ### 8.10 Modal
 
@@ -534,6 +536,7 @@ One component in all apps, at the bottom centre above the safe area and the FAB.
 - **Celebration toast** (`kind: 'celebrate'`): for a found easter egg or a real milestone. A bright amber border and glow, and it pops in on the slow spatial spring with a slight turn. Use it rarely, or it stops meaning anything.
 - `role="status"`, or `role="alert"` for failures.
 - One at a time: a new toast replaces the current one.
+- **Never over a docked control.** Anything held at the bottom of the screen (a sheet, an action bar, a tray) lifts the toast above itself with `liftToastAbove(el)` (or `use:liftToastAbove`), which sets `--toast-lift` on `<body>`. Several holders can lift at once; the toast rises by the largest.
 - Always tappable, over a modal too. A modal `<dialog>` makes everything outside it inert, top-layer popovers included, so while one is open `Toast` keeps its regions inside the topmost modal, and puts them back in the page when it closes.
 
 ### 8.13 Notice banner
@@ -584,6 +587,8 @@ The same structure in every app, in a sheet on phones:
 
 Each group starts with a section label. Rows are hairline-divided. A row's control goes on the right, and a hint goes under the label.
 
+**Settings rows** (`.settings-group`, `.settings-row`): at least 56px tall, an `--accent-amber` icon (`.settings-row-icon`, 20px), the title in `--text-heading` at 0.9375rem with an optional one-line hint under it (`.settings-row-text`, `.settings-row-title`, `.settings-row-hint`), and on the right a value in mono (`.settings-row-value`), a control, or a chevron (`.settings-row-chevron`) when the row opens something. A row that opens something is a `<button>`. A hint is a short phrase that may wrap, never cut off mid-word; anything longer goes in a hint paragraph under the group, or on the screen the row opens. Each group has at most one primary button, for the action people come for ("Back up now").
+
 ### 8.18 Switch row
 
 An on/off setting is a switch row (`Switch`, `.switch-row`), from Rosetta. The whole row is one button with `role="switch"` and `aria-checked`, at least 56px tall: the label in `--text-heading` at 0.9375rem, an optional field hint under it, and the track on the right. The track is 44×26px in `--chart-track` with a 1px `--border`; on, it fills `--accent-bright` and the knob turns `--on-accent`, grows from 0.75 to full size and slides on the fast spatial spring. Under the finger the knob swells. Rows are divided by `--border-faint`, and the last one in a group has no rule.
@@ -601,6 +606,19 @@ Material 3 Expressive's loading indicator (`LoadingIndicator`): one `--accent-am
 ### 8.21 Wavy progress
 
 Material 3 Expressive's wavy progress bar (`WavyProgress`): a 4px rounded stroke in `--accent-amber` that ripples as a sine wave while the work goes on, over a flat `--chart-track` track with a small gap. With a `value` it fills to that fraction; without one it is indeterminate and the whole bar ripples. At 100% it flattens and turns `--accent-sage`. Use it for imports, backups, binding a book, scanning a folder: anything with a known amount of work. Under reduced motion the wave is flat.
+
+### 8.22 Docked action bar
+
+For a long form whose one forward action would otherwise sit at the bottom of several screens: Ledger's entry form. The bar (`.action-bar`) is held at the bottom of the screen, above the safe area, while the form scrolls, and comes to rest at the form's end.
+
+- A pill of `--modal-bg` with a 1px `rgba(amber, 0.3)` border and the toast's shadow. On the left a short live summary (`.action-bar-summary`: a score dial and its tier, a total, a count); on the right the primary button, and at most one muted or icon button before it.
+- It stays while the on-screen keyboard is up, so Save is one tap from the last field. The page keeps the focused field clear of it (`scroll-padding-bottom` while an `.action-bar` is on the page), so the bar never covers what is being typed.
+- It lifts the toast above itself (§8.12).
+- The form's primary button lives in the bar only, so a screen still has one.
+
+### 8.23 Labelled icon actions
+
+For a card's own actions when there are three or four of them (edit, share, compare, delete). Each is an icon over its word in the icon-tab type (mono caps, 0.6875rem, tracked 0.08em), sharing the row's width evenly (`.icon-actions`), at least 56px tall. Inactive actions are `--text-dim`, `--text-heading` on hover; a pressed toggle is `--accent-amber` (`aria-pressed`); a destructive one is `--danger` (`.is-danger`). Words, not bare icons, because a card's actions are not as familiar as an app's sections.
 
 ---
 
@@ -870,6 +888,17 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
 
+**Added in 3.1.0 (from Ledger's UI review)**
+
+- The compact screen header (`.screen-header`, §8.8) and the sticky tab bar (`.tab-bar-sticky`, §8.5), so the page header no longer takes half of every phone screen.
+- The docked action bar (`.action-bar`, §8.22), settings rows (`.settings-row`, §8.17) and labelled icon actions (`.icon-actions`, §8.23).
+- `liftToastAbove` and `holdToastLift` (§8.12): a toast is lifted above sheets, action bars and trays, not only above the FAB.
+
+**Changed in 3.1.0**
+
+- Field labels are 0.6875rem (11px), up from 0.625rem (§5.2). At 10px, tracked capitals were hard to read at arm's length.
+- The theme toggle's touch target is 64×46px around its unchanged 60×32 track (§8.9, §14).
+
 **Fixed in 3.0.1**
 
 - An icon tab with a count is named by its visible word again (§8.5.1, WCAG 2.5.3 label in name). Since 2.4.0 its `aria-label` was "Logbook, 2" while the screen showed "2 Logbook", so voice control couldn't find it by what it showed. The drawn badge is now hidden from assistive tech and a visually hidden ", 2" follows the word; the name a screen reader hears is still "Logbook, 2".
@@ -932,9 +961,9 @@ Everything in this document that can be code lives in one package, **`dusk-dawn`
 |---|---|
 | `tokens.json` | Every colour, size, shape, weight, spring, duration and font (§3, §5.1, §6, §11), and the contrast pairs (§15) |
 | `css/tokens.css` | The theme file generated from `tokens.json`, with the Fraunces `@font-face` rules |
-| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, select menu, time picker, checkbox, slider, segmented control, tab rail, icon tabs, modal, sheet, toast, notice, empty states, switch row, timer chip, step type, loading indicator, wavy progress, delight utilities and the Expressive motion |
+| `css/components.css` | The shared components (§4 to §11): base, glows, panels, buttons, chips, fields, select menu, time picker, checkbox, slider, segmented control, tab rail, icon tabs, sticky tab bar, screen header, modal, sheet, toast, notice, empty states, switch row, settings rows, docked action bar, labelled icon actions, timer chip, step type, loading indicator, wavy progress, delight utilities and the Expressive motion |
 | `fonts/` | Fraunces, normal and italic, with its licence (§5.1) |
-| `LoadingIndicator`, `Select`, `Switch`, `TabRail`, `ThemeToggle`, `TimeField`, `Toast`, `WavyProgress` | The Svelte components every app shares (§8.20, §8.6.1, §8.18, §8.5, §8.9, §8.6, §8.12, §8.21), and `dismissOverlay` for Android back (§14) |
+| `LoadingIndicator`, `Select`, `Switch`, `TabRail`, `ThemeToggle`, `TimeField`, `Toast`, `WavyProgress` | The Svelte components every app shares (§8.20, §8.6.1, §8.18, §8.5, §8.9, §8.6, §8.12, §8.21), `liftToastAbove` for docked controls (§8.12), and `dismissOverlay` for Android back (§14) |
 | `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, `shapeClipPath`, `spring` | The Expressive helpers (§6.4, §11), from `dusk-dawn` in components or `dusk-dawn/expressive` in plain modules |
 | `dusk-dawn/places`, `dusk-dawn/places/vite` | The world gazetteer every app with a map uses (§18.4): about 320,000 places from GeoNames, the parser and search, and the Vite plugin that ships the file |
 | `dusk-dawn` command | `check` (contrast), `colours` (no literal colours in an app), `css` and `kotlin` (theme files for other targets) |

@@ -213,7 +213,7 @@ button {
 }
 .t-field-label {
   display: block;
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.2em;
 }
 .t-hint {
@@ -1223,6 +1223,12 @@ button {
 .theme-toggle:hover {
   border-color: var(--text-dim);
 }
+/* A 44px touch target (§14) around the 60x32 track, without changing its look. */
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  inset: -7px -2px;
+}
 /* Each icon is centred where the knob rests, so it sits exactly under it. */
 .theme-toggle .toggle-icon {
   position: absolute;
@@ -1748,6 +1754,232 @@ button.notice > .notice-chevron {
   scale: 1;
 }
 
+/* ─── Screen header (§8.8) ───────────────────────────────────── */
+/* Compact: one line under the safe area. A title on the left (with an
+   optional back button before it), up to two icon actions on the right. */
+
+.screen-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  margin-bottom: var(--space-4);
+}
+.screen-header-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: var(--weight-regular);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-heading);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.screen-header-title em {
+  color: var(--accent-amber);
+}
+.screen-header-back {
+  margin-left: calc(-1 * var(--space-2));
+}
+.screen-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+/* ─── Sticky tab bar (§8.5) ──────────────────────────────────── */
+/* The tab row stays at the top as the page scrolls, over a strip of the
+   page's own top colour (a touch of frost, never see-through), so it never
+   reads as a separate bar. */
+
+.tab-bar-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding-top: var(--inset-top);
+  background: color-mix(in srgb, var(--bg-grad-top) 96%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ─── Docked action bar (§8.22) ──────────────────────────────── */
+/* A long form's summary and its one forward action, held at the bottom of
+   the screen while the form scrolls, and set down at the form's end. */
+
+.action-bar {
+  position: sticky;
+  bottom: calc(var(--inset-bottom) + var(--space-3));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  background: var(--modal-bg);
+  border: 1px solid rgba(var(--accent-amber-rgb), 0.3);
+  border-radius: var(--corner-full);
+  box-shadow: 0 12px 40px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-strength)));
+}
+/* A field that takes focus scrolls clear of the bar, above the keyboard too. */
+html:has(.action-bar) {
+  scroll-padding-bottom: calc(var(--inset-bottom) + 6rem);
+}
+.action-bar-summary {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.action-bar-summary > :last-child {
+  min-width: 0;
+}
+
+/* ─── Settings rows (§8.17) ──────────────────────────────────── */
+/* An icon, a title with an optional one-line hint, and a value or a chevron
+   on the right. A row is a button when it opens something. */
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+}
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--space-3) 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--border-faint);
+}
+.settings-row:last-child {
+  border-bottom: 0;
+}
+button.settings-row {
+  cursor: pointer;
+  border-radius: var(--corner-sm);
+  transition: background-color var(--dur-hover);
+}
+button.settings-row:hover {
+  background: var(--hover-bg);
+}
+button.settings-row:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+button.settings-row:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.settings-row-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--accent-amber);
+}
+.settings-row-icon > svg {
+  width: 20px;
+  height: 20px;
+}
+.settings-row-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.settings-row-title {
+  color: var(--text-heading);
+  font-size: 0.9375rem;
+}
+.settings-row-hint {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+.settings-row-value {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.settings-row-chevron {
+  flex-shrink: 0;
+  color: var(--text-dim);
+}
+
+/* ─── Labelled icon actions (§8.23) ──────────────────────────── */
+/* A short row of actions on a card: each an icon over its word, sharing the
+   width evenly, like the icon tabs. */
+
+.icon-actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+}
+.icon-actions button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 0;
+  min-height: 56px;
+  padding: var(--space-2) var(--space-1);
+  background: none;
+  border: 0;
+  border-radius: var(--corner-md);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-hover),
+    color var(--dur-hover),
+    transform var(--spring-spatial-fast-dur) var(--spring-spatial-fast);
+}
+.icon-actions button:hover {
+  background: var(--hover-bg);
+  color: var(--text-heading);
+}
+.icon-actions button:active {
+  transform: scale(var(--press-scale));
+}
+.icon-actions button > svg {
+  width: 20px;
+  height: 20px;
+}
+.icon-actions button[aria-pressed='true'] {
+  color: var(--accent-amber);
+}
+.icon-actions button.is-danger {
+  color: var(--danger);
+}
+.icon-actions button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.icon-action-word {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 /* ─── Timer chip (§8.19) ─────────────────────────────────────── */
 
 /* A running countdown: label, mono time, then its controls as icon buttons. */
@@ -2195,6 +2427,9 @@ button.notice > .notice-chevron {
   .theme-toggle:active .knob,
   .switch-row:active .switch-knob {
     scale: none;
+  }
+  .icon-actions button:active {
+    transform: none;
   }
   .empty-state > svg,
   .loading-indicator-shape,
