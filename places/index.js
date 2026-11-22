@@ -93,19 +93,23 @@ function kindFilter(kinds) {
 
 /**
  * The same file with only some kinds of place in it, for an app that needs
- * fewer (Ledger keeps cities). Run at build time, so the phone never carries
- * the rest.
+ * fewer (Ledger keeps cities), or only places of at least `minRank` (8 ×
+ * log10 of population: 32 is a town of 10,000), for a small first file that
+ * answers the usual searches while the whole one loads. Run at build time, so
+ * the phone never carries the rest.
  */
-export function filterPlaces(text, { kinds } = {}) {
+export function filterPlaces(text, { kinds, minRank } = {}) {
   const keep = kindFilter(kinds);
-  if (!keep) return text;
+  if (!keep && !minRank) return text;
   const { rows } = sections(text);
   const head = text.slice(0, text.length - rows.join('\n').length);
   const kept = [];
   const moved = new Map();
   rows.forEach((row, i) => {
     if (row === '') return;
-    if (!keep.has(row.split('|', 8)[7] ?? '')) return;
+    const f = row.split('|', 8);
+    if (keep && !keep.has(f[7] ?? '')) return;
+    if (minRank && (Number(f[3]) || 0) < minRank) return;
     moved.set(i, kept.length);
     kept.push(row);
   });

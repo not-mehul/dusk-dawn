@@ -888,6 +888,10 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
 
+**Added in 3.2.0**
+
+- A quick first places file (§18.4): `filterPlaces` and the Vite plugin take `minRank`, so an app can ship the larger places as a small second file that answers the usual searches while the whole gazetteer loads. For Ledger's towns, places of 10,000 people or more are 1.7 MB instead of 7.7 MB, and parse about five times faster.
+
 **Added in 3.1.0 (from Ledger's UI review)**
 
 - The compact screen header (`.screen-header`, §8.8) and the sticky tab bar (`.tab-bar-sticky`, §8.5), so the page header no longer takes half of every phone screen.
@@ -1026,6 +1030,11 @@ Each place carries its country, its region, its IANA time zone, the city a landm
    ```
 
 2. Fetch it once, off the critical path, and parse it with `parsePlacesInSlices(text)`, which works a few milliseconds at a time and hands the main thread back in between, so a phone never stutters while it loads. The result is held in columns, not a third of a million objects. (`parsePlaces(text)` does the same in one go, for tests and build scripts.)
+   For suggestions that arrive at once, ship a quick first file too: the same plugin again with `minRank` (8 × log10 of population; 32 keeps towns of 10,000 or more). Search it while the whole file loads, then switch. It finds the places most people type, in the same order the whole file would; only small towns wait for the whole file. Match typed text to a pin (`named`) against the whole file only, or a village could be pinned on a larger namesake elsewhere.
+
+   ```ts
+   worldPlaces({ fileName: 'catalog/places-quick.txt', kinds: ['city'], minRank: 32 })
+   ```
 3. Look places up with `named` (exact, for text the person typed without picking a suggestion) and `search` (prefix, for suggestions). Both put the place most people mean first: a town before a region or landmark of its size, a place's own name before a name it is also known by.
 4. When nothing matches, keep the text and leave the place without a pin. An honest blank beats a confident pin in the wrong country.
 5. Credit GeoNames where the app lists its sources: "Places: GeoNames (geonames.org), CC BY 4.0".

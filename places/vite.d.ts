@@ -1,9 +1,9 @@
-import type { PlaceOptions } from './index.js';
+import type { FilterOptions } from './index.js';
 
-export function readWorldPlaces(options?: PlaceOptions): string;
+export function readWorldPlaces(options?: FilterOptions): string;
 
 export function worldPlaces(
-  options?: PlaceOptions & { fileName?: string }
+  options?: FilterOptions & { fileName?: string }
 ): {
   name: string;
   configureServer(server: unknown): void;

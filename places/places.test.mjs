@@ -80,6 +80,28 @@ test('a filtered file keeps only those kinds, and its links still point right', 
   assert.throws(() => parsePlaces(readWorldPlaces(), { kinds: ['castle'] }));
 });
 
+test('a quick first file keeps the larger places, and searches as the whole one does', () => {
+  const cities = parsePlaces(readWorldPlaces({ kinds: ['city'] }));
+  const quick = parsePlaces(readWorldPlaces({ kinds: ['city'], minRank: 32 }));
+  assert.ok(quick.size > 30_000 && quick.size < cities.size / 3, `${quick.size} of ${cities.size}`);
+  for (let i = 0; i < quick.size; i += 211) assert.ok(quick.place(i).rank >= 32, quick.place(i).name);
+  // The places most people look for, found the same way, in the same order.
+  for (const q of ['par', 'lond', 'sao pa', 'york', 'bombay', 'kyo']) {
+    const larger = cities.search(q, { limit: 200 }).filter((p) => p.rank >= 32);
+    assert.deepEqual(quick.search(q).map((p) => p.name), larger.slice(0, 6).map((p) => p.name), q);
+  }
+  assert.equal(quick.named('Bombay')[0].name, 'Mumbai');
+  assert.equal(quick.named('Paris')[0].country, 'FR');
+  // A village is only in the whole file.
+  const village = cities.search('ab', { limit: 1000 }).find((p) => p.rank < 32);
+  assert.ok(village, 'a small town to look for');
+  assert.ok(!quick.named(village.name).some((p) => p.latitude === village.latitude && p.longitude === village.longitude), village.name);
+  assert.equal(quick.countries.length, cities.countries.length);
+  // minRank alone, and both filters off, still work.
+  assert.ok(parsePlaces(filterPlaces(readWorldPlaces(), { minRank: 40 })).size < quick.size);
+  assert.equal(filterPlaces('x', {}), 'x');
+});
+
 test('parsing in slices gives the same gazetteer', async () => {
   const sliced = await parsePlacesInSlices(readWorldPlaces());
   assert.equal(sliced.size, world.size);
