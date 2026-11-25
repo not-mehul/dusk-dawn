@@ -46,11 +46,16 @@ export interface PlaceOptions {
   kinds?: readonly PlaceKind[];
 }
 
+export interface FilterOptions extends PlaceOptions {
+  /** Keep only places ranked this or higher (8 × log10 of population: 32 is a town of 10,000). */
+  minRank?: number;
+}
+
 export const PLACES_FORMAT: string;
 export const KINDS: Readonly<Record<string, PlaceKind>>;
 
 export function foldPlaceName(value: string): string;
-export function filterPlaces(text: string, options?: PlaceOptions): string;
+export function filterPlaces(text: string, options?: FilterOptions): string;
 
 export class Gazetteer {
   constructor(text: string, options?: PlaceOptions);

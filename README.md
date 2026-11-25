@@ -49,7 +49,11 @@ import { LoadingIndicator, Select, Switch, TabRail, ThemeToggle, TimeField, Toas
 ```ts
 // vite.config.ts: ship the gazetteer beside the page, only the kinds the app needs
 import { worldPlaces } from 'dusk-dawn/places/vite';
-plugins: [worldPlaces({ fileName: 'catalog/places.txt', kinds: ['city', 'district'] })];
+plugins: [
+  worldPlaces({ fileName: 'catalog/places.txt', kinds: ['city', 'district'] }),
+  // optional: the larger places only, to answer the first searches while the whole file loads
+  worldPlaces({ fileName: 'catalog/places-quick.txt', kinds: ['city', 'district'], minRank: 32 }),
+];
 
 // in the app, the first time a place is needed
 import { parsePlacesInSlices } from 'dusk-dawn/places';

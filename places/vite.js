@@ -7,21 +7,27 @@
 //
 // The page then fetches `<base>catalog/places.txt` and hands the text to
 // parsePlaces. In dev the same path is served from memory.
+//
+// For a quick first file, add the plugin again with `minRank`: the larger
+// places only, a fraction of the size, to answer the usual searches while the
+// whole file loads (style.md §18.4).
+//
+//   worldPlaces({ fileName: 'catalog/places-quick.txt', kinds: ['city'], minRank: 32 })
 
 import { readFileSync } from 'node:fs';
 import { filterPlaces } from './index.js';
 
-/** The gazetteer's text, narrowed to `kinds` when given. For tests and build scripts. */
-export function readWorldPlaces({ kinds } = {}) {
-  return filterPlaces(readFileSync(new URL('./world.txt', import.meta.url), 'utf8'), { kinds });
+/** The gazetteer's text, narrowed to `kinds` and `minRank` when given. For tests and build scripts. */
+export function readWorldPlaces({ kinds, minRank } = {}) {
+  return filterPlaces(readFileSync(new URL('./world.txt', import.meta.url), 'utf8'), { kinds, minRank });
 }
 
 /** A Vite plugin that emits the gazetteer as `fileName` (default `places.txt`). */
-export function worldPlaces({ fileName = 'places.txt', kinds } = {}) {
+export function worldPlaces({ fileName = 'places.txt', kinds, minRank } = {}) {
   let text;
-  const source = () => (text ??= readWorldPlaces({ kinds }));
+  const source = () => (text ??= readWorldPlaces({ kinds, minRank }));
   return {
-    name: 'dusk-dawn-places',
+    name: `dusk-dawn-places:${fileName}`,
     configureServer(server) {
       const base = server.config.base ?? '/';
       server.middlewares.use((req, res, next) => {
