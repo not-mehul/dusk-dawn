@@ -80,6 +80,56 @@ test('a filtered file keeps only those kinds, and its links still point right', 
   assert.throws(() => parsePlaces(readWorldPlaces(), { kinds: ['castle'] }));
 });
 
+test('cities answer to their names in their own languages', () => {
+  const g = parsePlaces(readWorldPlaces({ kinds: ['city'] }));
+  const first = (n) => {
+    const p = g.named(n)[0];
+    return p && `${p.name} ${p.country}`;
+  };
+  assert.equal(first('Wien'), 'Vienna AT');
+  assert.equal(first('Lisboa'), 'Lisbon PT');
+  assert.equal(first('Firenze'), 'Florence IT');
+  assert.equal(first('München'), 'Munich DE');
+  assert.equal(first('Warszawa'), 'Warsaw PL');
+  assert.equal(first('Bruxelles'), 'Brussels BE');
+  assert.equal(first('Brussel'), 'Brussels BE');
+  // The capital, not the Slovak village of the same name.
+  assert.equal(first('Praha'), 'Prague CZ');
+  // And search finds them as you type.
+  assert.equal(g.search('wien')[0].name, 'Vienna');
+  // Most cities over a million now have another name.
+  let big = 0;
+  let bare = 0;
+  for (let i = 0; i < g.size; i++) {
+    const p = g.place(i);
+    if (p.rank < 48) continue;
+    big++;
+    if (!p.alternates.length) bare++;
+  }
+  assert.ok(bare / big < 0.35, `${bare} of ${big} big cities have no other name`);
+});
+
+test('nearest: the towns around a point, closest first', () => {
+  const g = parsePlaces(readWorldPlaces({ kinds: ['city'] }));
+  // The Praça do Comércio, Lisbon.
+  const near = g.nearest(38.7077, -9.1365);
+  // Its own neighbourhood towns are closer than the city's centre point; the city is there too.
+  const lisbon = near.find((p) => p.name === 'Lisbon');
+  assert.ok(lisbon && lisbon.distanceKm < 3, JSON.stringify(near.map((p) => [p.name, p.distanceKm])));
+  for (let i = 1; i < near.length; i++) assert.ok(near[i].distanceKm >= near[i - 1].distanceKm);
+  // Across the antimeridian, and nothing in mid-ocean.
+  assert.ok(g.nearest(-17.7, 178.0, { withinKm: 300 }).some((p) => p.country === 'FJ'));
+  assert.deepEqual(g.nearest(0, -30), []);
+  assert.equal(g.nearest(38.7077, -9.1365, { limit: 2 }).length, 2);
+});
+
+test('villages travellers know are in, though under 1,000 people', () => {
+  const g = parsePlaces(readWorldPlaces({ kinds: ['city'] }));
+  for (const [name, cc] of [['Hallstatt', 'AT'], ['Giverny', 'FR'], ['Vernazza', 'IT'], ['Manarola', 'IT']]) {
+    assert.ok(g.named(name).some((p) => p.country === cc), `${name}, ${cc}`);
+  }
+});
+
 test('a quick first file keeps the larger places, and searches as the whole one does', () => {
   const cities = parsePlaces(readWorldPlaces({ kinds: ['city'] }));
   const quick = parsePlaces(readWorldPlaces({ kinds: ['city'], minRank: 32 }));

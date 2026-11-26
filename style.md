@@ -888,6 +888,11 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
 
+**Added in 3.3.0**
+
+- `nearest(latitude, longitude)`: the towns around a point, closest first, with their distance, for "where am I" from a phone's location (§18.4).
+- A fuller place list (§18.4): every place now carries up to two names in its own country's languages, so "Wien", "Lisboa", "Firenze", "München" and "Praha" find their cities. Before, only English names were kept, and 519 of the 655 cities over a million people had no other name. Villages under 1,000 people come in when they have a name in at least 12 languages (Hallstatt, Giverny, Vernazza): about 4,800 more. Towns for Ledger grow from 7.7 MB to 8.5 MB, and the quick file from 1.7 MB to 1.9 MB.
+
 **Added in 3.2.0**
 
 - A quick first places file (§18.4): `filterPlaces` and the Vite plugin take `minRank`, so an app can ship the larger places as a small second file that answers the usual searches while the whole gazetteer loads. For Ledger's towns, places of 10,000 people or more are 1.7 MB instead of 7.7 MB, and parse about five times faster.
@@ -1016,11 +1021,11 @@ An app never edits the package's files in `node_modules`, and never overrides a 
 
 Any app that puts places on a map or a globe (Waymark, Ledger) reads them from one file, `dusk-dawn/places/world.txt`, rather than keeping its own list. It holds about 320,000 places from [GeoNames](https://www.geonames.org/) (CC BY 4.0), to about 110 m:
 
-- every town of 1,000 people or more, every capital and every seat of a first- or second-level division;
+- every town of 1,000 people or more, every capital and every seat of a first- or second-level division, and the smaller villages known well enough to have a name in a dozen languages (Hallstatt, Giverny, Manarola);
 - every state, province and region, and the neighbourhoods with an English Wikipedia article (Bloomsbury, Shibuya);
 - landmarks, islands, mountains, lakes and falls, parks and stations with an English Wikipedia article (the Eiffel Tower, Santorini, Mount Fuji).
 
-Each place carries its country, its region, its IANA time zone, the city a landmark or neighbourhood belongs to, and its English, old and local names, so "Bombay" finds Mumbai and "Toscana" finds Tuscany.
+Each place carries its country, its region, its IANA time zone, the city a landmark or neighbourhood belongs to, and its English and old names and its names in its own country's languages, so "Bombay" finds Mumbai, "Wien" finds Vienna, "Praha" finds Prague (not the Slovak village) and "Toscana" finds Tuscany. Names in another script (Москва) are kept but only match typed in that script.
 
 1. Ship the file with the Vite plugin, keeping only the kinds the app needs. Ledger keeps towns (about 3.2 MB compressed in the app); Waymark keeps everything (about 4.5 MB).
 

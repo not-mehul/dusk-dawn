@@ -35,6 +35,9 @@ export const KINDS = Object.freeze({
   l: 'landmark'
 });
 const LETTERS = Object.keys(KINDS);
+/** How much smaller (in rank: 8 is tenfold) a place named exactly what was typed may be and still lead a search. */
+const EXACT_REACH = 16;
+
 /**
  * Added to a place's rank when ordering matches. A town is what most people
  * mean by a name it shares with its region (Kyoto) or a landmark (Grand
@@ -288,6 +291,35 @@ export class Gazetteer {
    * later word that does ("york" finds New York); then places also known by a
    * name that does.
    */
+  /**
+   * The places closest to a point, nearest first, each with its distance in
+   * km. For "where am I": a phone's location to the towns around it. Looks
+   * only within `withinKm` (50 by default).
+   */
+  nearest(latitude, longitude, { limit = 5, kinds, withinKm = 50 } = {}) {
+    const keep = kindFilter(kinds);
+    const rad = Math.PI / 180;
+    // A box first, so the exact distance is worked out for few places.
+    const dLat = withinKm / 111.2;
+    const dLon = withinKm / (111.2 * Math.max(Math.cos(latitude * rad), 0.01));
+    const found = [];
+    for (let i = 0; i < this.size; i++) {
+      const la = this._lat[i];
+      if (Math.abs(la - latitude) > dLat) continue;
+      let dl = Math.abs(this._lon[i] - longitude);
+      if (dl > 180) dl = 360 - dl;
+      if (dl > dLon) continue;
+      if (keep && !keep.has(LETTERS[this._kind[i]])) continue;
+      const h =
+        Math.sin(((la - latitude) * rad) / 2) ** 2 +
+        Math.cos(latitude * rad) * Math.cos(la * rad) * Math.sin(((this._lon[i] - longitude) * rad) / 2) ** 2;
+      const km = 12742 * Math.asin(Math.sqrt(h));
+      if (km <= withinKm) found.push([i, km]);
+    }
+    found.sort((a, b) => a[1] - b[1]);
+    return found.slice(0, limit).map(([i, km]) => ({ ...this.place(i), distanceKm: Math.round(km * 10) / 10 }));
+  }
+
   search(query, { limit = 6, kinds } = {}) {
     const q = foldPlaceName(query);
     if (q.length < 2) return [];
@@ -305,7 +337,16 @@ export class Gazetteer {
         if (ok(i)) starts.push(i);
       } else if (words.length < limit && key.includes(inner) && ok(i)) words.push(i);
     }
-    let found = [...starts, ...words];
+    // A place named exactly what was typed comes first, by any of its names,
+    // so "wien" finds Vienna before Wiener Neustadt and "praha" finds Prague
+    // before the village called Praha. Only one not far smaller than the best
+    // prefix match, though: "par" is still on its way to Paris, not to Par.
+    const best = starts.length ? this._score[starts[0]] : 0;
+    const exact = [...new Set([...(this._byName.get(q) ?? []), ...(this._byOther.get(q) ?? [])])].filter(
+      (i) => ok(i) && this._score[i] >= best - EXACT_REACH
+    );
+    exact.sort((a, b) => this._score[b] - this._score[a]);
+    let found = [...new Set([...exact, ...starts, ...words])];
     if (found.length < limit) {
       const others = [];
       for (const [key, list] of this._byOther) {

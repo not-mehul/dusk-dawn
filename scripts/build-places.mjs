@@ -31,8 +31,18 @@ const DIR = process.env.GEONAMES_DIR ?? join(root, '.geonames');
 
 /** Populated places at least this large are always in. */
 const MIN_POPULATION = 1000;
-/** Other names kept per place: its English names, old ones included, and its local one. */
+/** English names kept per place, old ones included. */
 const MAX_ALTERNATES = 6;
+/** Names in the place's own country's languages kept besides: "Wien", "Lisboa", "Praha". */
+const MAX_LOCAL = 2;
+/**
+ * A village under MIN_POPULATION still comes in when it has a name in this
+ * many languages: the ones travellers go to, such as Hallstatt and Giverny,
+ * which no list of towns by size would hold.
+ */
+const WELL_KNOWN_LANGUAGES = 12;
+/** Codes in alternateNames that are not languages. */
+const NOT_LANGUAGES = new Set(['link', 'post', 'iata', 'icao', 'faac', 'abbr', 'wkdt', 'unlc', 'tcid', 'phon', 'piny']);
 /** Two rows of one name and kind closer than this are one place. */
 const TWIN_KM = 3;
 /** Rank steps per tenfold in size: 8 tells a town of 10,000 from one of 13,000. */
@@ -138,7 +148,13 @@ const km = (a, b) => {
 };
 
 
-const countries = (await textRows('countryInfo.txt')).map((c) => ({ iso: c[0], name: c[4], numeric: Number(c[2]) }));
+const countries = (await textRows('countryInfo.txt')).map((c) => ({
+  iso: c[0],
+  name: c[4],
+  numeric: Number(c[2]),
+  // "de-AT,hr,hu,sl" → de, hr, hu, sl: the languages a local name may be in.
+  languages: new Set((c[15] ?? '').split(',').map((l) => l.trim().split('-')[0].toLowerCase()).filter(Boolean))
+}));
 const countryCodes = new Set(countries.map((c) => c.iso));
 const admin1Rows = await textRows('admin1CodesASCII.txt');
 const admin1Name = new Map(admin1Rows.map((a) => [a[0], a[1]]));
@@ -146,6 +162,8 @@ const admin1ById = new Map(admin1Rows.map((a) => [a[3], a[1]]));
 
 console.log('reading alternate names…');
 const wiki = new Set();
+/** geonameid → how many names it has in some language (a rough measure of how widely known it is). */
+const languageNames = new Map();
 /** geonameid → { name: the English name to show, score, all: every English name } */
 const english = new Map();
 await zipLines(await file('alternateNamesV2.zip'), 'alternateNamesV2.txt', (c) => {
@@ -155,6 +173,7 @@ await zipLines(await file('alternateNamesV2.zip'), 'alternateNamesV2.txt', (c) =
     if (name.includes('en.wikipedia.org')) wiki.add(own(id));
     return;
   }
+  if (lang && !NOT_LANGUAGES.has(lang)) languageNames.set(id, (languageNames.get(id) ?? 0) + 1);
   if (lang !== 'en' || colloquial === '1' || name.length > 30) return;
   let entry = english.get(id);
   if (!entry) english.set(own(id), (entry = { name: '', score: -1, all: [] }));
@@ -182,7 +201,13 @@ await zipLines(await file('allCountries.zip'), 'allCountries.txt', (c) => {
     if (fcode === 'PPLX') {
       if (!notable) return;
       kind = 'd';
-    } else if (population >= MIN_POPULATION || SEATS.has(fcode) || (notable && population > 0)) {
+    } else if (
+      population >= MIN_POPULATION ||
+      SEATS.has(fcode) ||
+      (notable && population > 0) ||
+      (languageNames.get(id) ?? 0) >= WELL_KNOWN_LANGUAGES
+    ) {
+      if (population < MIN_POPULATION && !SEATS.has(fcode) && !(notable && population > 0)) tally.wellKnownVillages = (tally.wellKnownVillages ?? 0) + 1;
       kind = 'c';
     } else return;
   } else {
@@ -204,6 +229,7 @@ await zipLines(await file('allCountries.zip'), 'allCountries.txt', (c) => {
     alts.push(own(cleaned));
   }
   const p = {
+    id: own(id),
     name: own(display),
     lat: Number(lat),
     lon: Number(lon),
@@ -229,6 +255,38 @@ await zipLines(await file('allCountries.zip'), 'allCountries.txt', (c) => {
   tally[kind] = (tally[kind] ?? 0) + 1;
 });
 console.log(tally);
+
+console.log('reading local names…');
+// Each place's names in its country's own languages, so "Wien" finds Vienna
+// and "Praha" finds Prague rather than a village of that name.
+const byId = new Map(picked.map((p) => [p.id, p]));
+const languagesOf = new Map(countries.map((c) => [c.iso, c.languages]));
+const local = new Map();
+await zipLines(await file('alternateNamesV2.zip'), 'alternateNamesV2.txt', (c) => {
+  const [, id, lang, name, preferred, short, colloquial, historic] = c;
+  const p = byId.get(id);
+  if (!p || !lang || colloquial === '1' || historic === '1' || name.length > 30) return;
+  if (!languagesOf.get(p.cc)?.has(lang.split('-')[0].toLowerCase())) return;
+  if (!local.has(id)) local.set(id, []);
+  local.get(id).push({ name: own(name), score: (preferred === '1' ? 2 : 0) + (short === '1' ? 0 : 1) });
+});
+let localAdded = 0;
+for (const [id, names] of local) {
+  const p = byId.get(id);
+  const seen = new Set([p.name, ...p.alts].map(fold));
+  let added = 0;
+  // Preferred names first; a tie keeps the order GeoNames lists them in.
+  for (const { name } of names.map((n, i) => ({ ...n, i })).sort((a, b) => b.score - a.score || a.i - b.i)) {
+    const cleaned = clean(name);
+    const key = fold(cleaned);
+    if (!key || seen.has(key) || added >= MAX_LOCAL) continue;
+    seen.add(key);
+    p.alts.unshift(own(cleaned));
+    added++;
+  }
+  if (added) localAdded++;
+}
+console.log(`${localAdded} places gained a local name`);
 
 // Grouped by country and region, which compresses a quarter smaller than one
 // list by size; each row carries a rank so the reader can still put the
