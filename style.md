@@ -426,7 +426,7 @@ Top-level and in-screen navigation. **One pattern in all three apps**, replacing
 - Horizontally scrollable when it overflows, with no visible scrollbar. Keep the active tab in view.
 - A count badge may follow a label.
 - Placed under the page header. **No bottom navigation bar.** These apps have three to five top-level sections and a FAB, and the tab rail keeps the editorial top-of-page structure.
-- **On a phone, the top-level tabs stick to the top** as the page scrolls (`.tab-bar-sticky` around them), on a near-opaque strip of `--bg-grad-top` that starts under the status bar, so nothing reads through it. The page header scrolls away above them, so every section stays one tap away without a bottom bar.
+- **On a phone, the top-level tabs stick to the top** as the page scrolls (`.tab-bar-sticky` around them, with `use:markStuck`), just under the status bar. At rest they are only the tabs on the page. Once stuck, a near-opaque strip of `--bg-grad-top` runs behind them edge to edge and up under the status bar, so nothing reads through it. The page header scrolls away above them, so every section stays one tap away without a bottom bar.
 
 #### 8.5.1 Icon tabs (top-level sections on a phone)
 
@@ -887,6 +887,10 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 - New shared components: `LoadingIndicator` (§8.20) and `WavyProgress` (§8.21). The connected segmented control, pill switch and theme toggle, celebration toast, and the drifting empty-state icon.
 - Delight and easter eggs (§11.3): `celebrate`, `play`, `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs`, the Expressive shape set (`SHAPES`, `shapeClipPath`), and `.dd-stagger`, `.dd-pressable`, `.dd-lift`.
 - Principle 6 changes from "nothing bounces" to springs, and principle 8 (leave something to find) is new.
+
+**Changed in 3.4.0**
+
+- The sticky tab bar (§8.5) no longer shows a box at rest. It used to pad itself by the status bar's height and draw its strip even before it stuck, so under the page header a phone showed an empty band above the tabs, inside a box of a slightly different colour. Now it sticks just under the status bar, and its strip (edge to edge, and up under the status bar) appears only once stuck. Add `use:markStuck` (from this package) to the bar; without it the bar works but never draws its strip.
 
 **Added in 3.3.0**
 

@@ -1793,18 +1793,35 @@ button.notice > .notice-chevron {
 }
 
 /* ─── Sticky tab bar (§8.5) ──────────────────────────────────── */
-/* The tab row stays at the top as the page scrolls, over a strip of the
-   page's own top colour (a touch of frost, never see-through), so it never
-   reads as a separate bar. */
+/* The tab row stays at the top as the page scrolls, just under the status
+   bar. At rest it is only the tabs on the page. Once stuck (`.is-stuck`, set
+   by `markStuck`), a strip of the page's own top colour (a touch of frost,
+   never see-through) runs behind it, edge to edge, and up under the status
+   bar, so nothing reads through either. */
 
 .tab-bar-sticky {
   position: sticky;
-  top: 0;
+  top: var(--inset-top);
   z-index: 30;
-  padding-top: var(--inset-top);
+}
+.tab-bar-sticky::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: calc(-1 * var(--inset-top));
+  bottom: 0;
+  /* Edge to edge, however the page around the bar is padded. */
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
   background: color-mix(in srgb, var(--bg-grad-top) 96%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-toggle) ease-out;
+}
+.tab-bar-sticky.is-stuck::before {
+  opacity: 1;
 }
 
 /* ─── Docked action bar (§8.22) ──────────────────────────────── */
