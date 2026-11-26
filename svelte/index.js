@@ -11,6 +11,7 @@ export { default as Toast } from './Toast.svelte';
 export { default as WavyProgress } from './WavyProgress.svelte';
 export { dismissOverlay } from './overlay.js';
 export { holdToastLift, liftToastAbove } from './toast-lift.js';
+export { markStuck } from './sticky.js';
 export {
   LOADING_SHAPES,
   SHAPES,

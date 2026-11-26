@@ -13,3 +13,4 @@ export type { SelectOption } from './Select.svelte';
 export * from './expressive.js';
 export * from './overlay.js';
 export * from './toast-lift.js';
+export * from './sticky.js';
