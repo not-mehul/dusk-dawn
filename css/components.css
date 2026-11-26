@@ -1836,10 +1836,12 @@ button.notice > .notice-chevron {
   align-items: center;
   gap: var(--space-3);
   margin-top: var(--space-5);
-  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  min-height: 72px;
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
   background: var(--modal-bg);
   border: 1px solid rgba(var(--accent-amber-rgb), 0.3);
-  border-radius: var(--corner-full);
+  /* A card's corners, like the panels it docks over, not a pill. */
+  border-radius: var(--corner-lg);
   box-shadow: 0 12px 40px rgba(var(--shadow-rgb), calc(0.5 * var(--shadow-strength)));
 }
 /* A field that takes focus scrolls clear of the bar, above the keyboard too. */

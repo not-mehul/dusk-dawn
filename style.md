@@ -611,7 +611,7 @@ Material 3 Expressive's wavy progress bar (`WavyProgress`): a 4px rounded stroke
 
 For a long form whose one forward action would otherwise sit at the bottom of several screens: Ledger's entry form. The bar (`.action-bar`) is held at the bottom of the screen, above the safe area, while the form scrolls, and comes to rest at the form's end.
 
-- A pill of `--modal-bg` with a 1px `rgba(amber, 0.3)` border and the toast's shadow. On the left a short live summary (`.action-bar-summary`: a score dial and its tier, a total, a count); on the right the primary button, and at most one muted or icon button before it.
+- A card of `--modal-bg` with `--corner-lg` corners (like the panels it docks over), at least 72px tall, with a 1px `rgba(amber, 0.3)` border and the toast's shadow. On the left a short live summary (`.action-bar-summary`: a score dial and its tier, a total, a count); on the right the primary button, and at most one muted or icon button before it.
 - It stays while the on-screen keyboard is up, so Save is one tap from the last field. The page keeps the focused field clear of it (`scroll-padding-bottom` while an `.action-bar` is on the page), so the bar never covers what is being typed.
 - It lifts the toast above itself (§8.12).
 - The form's primary button lives in the bar only, so a screen still has one.
@@ -891,6 +891,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 **Changed in 3.4.0**
 
 - The sticky tab bar (§8.5) no longer shows a box at rest. It used to pad itself by the status bar's height and draw its strip even before it stuck, so under the page header a phone showed an empty band above the tabs, inside a box of a slightly different colour. Now it sticks just under the status bar, and its strip (edge to edge, and up under the status bar) appears only once stuck. Add `use:markStuck` (from this package) to the bar; without it the bar works but never draws its strip.
+- The docked action bar (§8.22) is a card, not a pill: `--corner-lg` like the panels it docks over, at least 72px tall, with a little more room inside.
 
 **Added in 3.3.0**
 
