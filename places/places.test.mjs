@@ -80,6 +80,42 @@ test('a filtered file keeps only those kinds, and its links still point right', 
   assert.throws(() => parsePlaces(readWorldPlaces(), { kinds: ['castle'] }));
 });
 
+test('cities answer to their names in their own languages', () => {
+  const g = parsePlaces(readWorldPlaces({ kinds: ['city'] }));
+  const first = (n) => {
+    const p = g.named(n)[0];
+    return p && `${p.name} ${p.country}`;
+  };
+  assert.equal(first('Wien'), 'Vienna AT');
+  assert.equal(first('Lisboa'), 'Lisbon PT');
+  assert.equal(first('Firenze'), 'Florence IT');
+  assert.equal(first('München'), 'Munich DE');
+  assert.equal(first('Warszawa'), 'Warsaw PL');
+  assert.equal(first('Bruxelles'), 'Brussels BE');
+  assert.equal(first('Brussel'), 'Brussels BE');
+  // The capital, not the Slovak village of the same name.
+  assert.equal(first('Praha'), 'Prague CZ');
+  // And search finds them as you type.
+  assert.equal(g.search('wien')[0].name, 'Vienna');
+  // Most cities over a million now have another name.
+  let big = 0;
+  let bare = 0;
+  for (let i = 0; i < g.size; i++) {
+    const p = g.place(i);
+    if (p.rank < 48) continue;
+    big++;
+    if (!p.alternates.length) bare++;
+  }
+  assert.ok(bare / big < 0.35, `${bare} of ${big} big cities have no other name`);
+});
+
+test('villages travellers know are in, though under 1,000 people', () => {
+  const g = parsePlaces(readWorldPlaces({ kinds: ['city'] }));
+  for (const [name, cc] of [['Hallstatt', 'AT'], ['Giverny', 'FR'], ['Vernazza', 'IT'], ['Manarola', 'IT']]) {
+    assert.ok(g.named(name).some((p) => p.country === cc), `${name}, ${cc}`);
+  }
+});
+
 test('a quick first file keeps the larger places, and searches as the whole one does', () => {
   const cities = parsePlaces(readWorldPlaces({ kinds: ['city'] }));
   const quick = parsePlaces(readWorldPlaces({ kinds: ['city'], minRank: 32 }));

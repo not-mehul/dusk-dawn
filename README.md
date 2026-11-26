@@ -19,7 +19,7 @@
 - Svelte 5 components: `IconTabs`, `LoadingIndicator`, `Select`, `Switch`, `TabRail`, `ThemeToggle`, `TimeField`, `Toast` and `WavyProgress`.
 - Themed replacements for the controls that would otherwise open Android's own pickers (style.md §8.6): `Select` (a menu in place of `<select>`), `TimeField` (a clock in place of `<input type="time">`), `.check` for checkboxes and `.range` for sliders, with `dismissOverlay()` for Android back.
 - Expressive helpers (style.md §11.3): `celebrate` (confetti in token colours), `play` (one-shot flourishes), `konami`, `secretTaps`, `longPress`, `countUp`, `createEggs` (easter-egg tracking), `shapeClipPath` and `spring`. All of them respect reduced motion.
-- `dusk-dawn/places`: the world gazetteer for apps with a map (style.md §18.4). About 320,000 places from GeoNames (CC BY 4.0): every town of 1,000 people or more, every region, and landmarks, islands, mountains, lakes, parks and stations with an English Wikipedia article, each with its time zone and English, old and local names. `dusk-dawn/places/vite` ships the file with an app.
+- `dusk-dawn/places`: the world gazetteer for apps with a map (style.md §18.4). About 320,000 places from GeoNames (CC BY 4.0): every town of 1,000 people or more and the villages travellers know, every region, and landmarks, islands, mountains, lakes, parks and stations with an English Wikipedia article, each with its time zone, its English and old names, and its names in its own country's languages. `dusk-dawn/places/vite` ships the file with an app.
 - The `dusk-dawn` command: `check` (contrast in both themes), `colours` (no literal colours in an app's source), `css` and `kotlin` (theme files for other targets).
 
 ## Using it in an app

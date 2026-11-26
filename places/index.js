@@ -35,6 +35,9 @@ export const KINDS = Object.freeze({
   l: 'landmark'
 });
 const LETTERS = Object.keys(KINDS);
+/** How much smaller (in rank: 8 is tenfold) a place named exactly what was typed may be and still lead a search. */
+const EXACT_REACH = 16;
+
 /**
  * Added to a place's rank when ordering matches. A town is what most people
  * mean by a name it shares with its region (Kyoto) or a landmark (Grand
@@ -305,7 +308,16 @@ export class Gazetteer {
         if (ok(i)) starts.push(i);
       } else if (words.length < limit && key.includes(inner) && ok(i)) words.push(i);
     }
-    let found = [...starts, ...words];
+    // A place named exactly what was typed comes first, by any of its names,
+    // so "wien" finds Vienna before Wiener Neustadt and "praha" finds Prague
+    // before the village called Praha. Only one not far smaller than the best
+    // prefix match, though: "par" is still on its way to Paris, not to Par.
+    const best = starts.length ? this._score[starts[0]] : 0;
+    const exact = [...new Set([...(this._byName.get(q) ?? []), ...(this._byOther.get(q) ?? [])])].filter(
+      (i) => ok(i) && this._score[i] >= best - EXACT_REACH
+    );
+    exact.sort((a, b) => this._score[b] - this._score[a]);
+    let found = [...new Set([...exact, ...starts, ...words])];
     if (found.length < limit) {
       const others = [];
       for (const [key, list] of this._byOther) {
