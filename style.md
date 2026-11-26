@@ -890,6 +890,7 @@ Every app answers a URL scheme named after itself, and hands work to a sibling t
 
 **Added in 3.3.0**
 
+- `nearest(latitude, longitude)`: the towns around a point, closest first, with their distance, for "where am I" from a phone's location (§18.4).
 - A fuller place list (§18.4): every place now carries up to two names in its own country's languages, so "Wien", "Lisboa", "Firenze", "München" and "Praha" find their cities. Before, only English names were kept, and 519 of the 655 cities over a million people had no other name. Villages under 1,000 people come in when they have a name in at least 12 languages (Hallstatt, Giverny, Vernazza): about 4,800 more. Towns for Ledger grow from 7.7 MB to 8.5 MB, and the quick file from 1.7 MB to 1.9 MB.
 
 **Added in 3.2.0**

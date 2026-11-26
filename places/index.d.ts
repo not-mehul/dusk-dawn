@@ -66,6 +66,8 @@ export class Gazetteer {
   place(id: number): WorldPlace;
   country(code: string): WorldCountry | undefined;
   named(name: string, options?: PlaceOptions): WorldPlace[];
+  /** The places closest to a point, nearest first, within `withinKm` (default 50). */
+  nearest(latitude: number, longitude: number, options?: PlaceOptions & { limit?: number; withinKm?: number }): (WorldPlace & { distanceKm: number })[];
   search(query: string, options?: PlaceOptions & { limit?: number }): WorldPlace[];
 }
 
